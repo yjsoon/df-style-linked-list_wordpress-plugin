@@ -24,11 +24,21 @@ function is_linked_list()
   }
 }
 
+function get_the_linked_list_link()
+{
+  $url = get_post_custom_values("linked_list_url");
+  return $url[0];
+}
+
+function the_linked_list_link()
+{
+  echo get_the_linked_list_link();
+}
+
 // This just echoes the chosen line, we'll position it later
 function ensure_rss_linked_list($value) {
-  $url = get_post_custom_values('linked_list_url');
   if (is_linked_list()) {
-    echo $url[0];
+    echo get_the_linked_list_link();
   } else {
     echo $value;
   }
@@ -36,6 +46,5 @@ function ensure_rss_linked_list($value) {
 
 // Now we set that function up to execute when the admin_footer action is called
 add_action('the_permalink_rss', 'ensure_rss_linked_list');
-add_action('the_permalink', 'ensure_rss_linked_list');
 
 ?>
