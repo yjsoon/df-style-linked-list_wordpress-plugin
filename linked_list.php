@@ -7,7 +7,7 @@
 /*
 Plugin Name: Linked List
 Plugin URI: http://wavethenavel.com/projects/wordpress-linked-list-plugin
-Description: Have designated posts act like the "Linked List" posts on Daring Fireball. Set the custom field "linked_list_url" to any desired destination on a post. The permalink then becomes that destination. Affects both templates and RSS feeds.
+Description: Have designated posts act like the "Linked List" posts on Daring Fireball. Set the custom field "linked_list_url" to any desired destination on a post. The permalink then becomes that destination. Affects RSS feeds automatically and provides functions you can use in your template to control the layout if the post is a normal post, or a linked-list post".
 Author: Jonathan Penn
 Version: 1.0
 Author URI: http://wavethenavel.com

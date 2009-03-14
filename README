@@ -4,7 +4,7 @@
 
 == DESCRIPTION:
 
-Have designated posts act like the "Linked List" posts on Daring Fireball (http://daringfireball.net). Set the custom field "linked_list_url" to any desired destination on a post. The permalink then becomes that destination. Affects both templates and RSS feeds.
+Have designated posts act like the "Linked List" posts on Daring Fireball (http://daringfireball.net). Set the custom field "linked_list_url" to any desired destination on a post. The permalink then becomes that destination. Affects RSS feeds automatically and provides functions you can use in your template to control the layout if the post is a normal post, or a linked-list post".
 
 == REQUIREMENTS:
 
@@ -15,6 +15,34 @@ Have designated posts act like the "Linked List" posts on Daring Fireball (http:
 * Copy all the files in this repository to a directory in your "wp-content/plugins" directory. (name it something like "linked_list")
 * Navigate to the plugins page in the backend and click "Activate" to enable it.
 * When adding a link, just create a normal blog post with a description. Add a custom field "linked_list_url" with the desired destination.
+* RSS Feeds will automatically have their link be replaced with the lined_list_url field value.
+* Templates can be changed by using the provided functions to check whether your are rendering a linked list item or not. For example:
+
+   ....the top part of a template....
+   <?php if (have_posts()): ?>
+      <?php while (have_posts()) : the_post(); ?>
+
+        <?php if (is_linked_list()): ?>
+
+          ...other HTML formatting...
+          <a href="<?php the_linked_list_link()">This is a linked list link</a>
+          ...other HTML formatting...
+
+        <?php else: ?>
+
+          ...other HTML formatting...
+          <a href="<?php the_link()">This is a normal post link</a>
+          ...other HTML formatting...
+
+        <?php endif; ?>
+      <?php endwhile; ?>
+    <?php endif; ?>
+    ...the rest of the template...
+
+
+So, basically use the "is_linked_list()" function to check. And then alter your template the way you wish to make it look or act differently.
+
+For more information about customizing wordpress templates, view the "Template Tags" document on the Wordpress Codex (http://codex.wordpress.org/Template_Tags)
 
 == LICENSE:
 
