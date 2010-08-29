@@ -109,7 +109,7 @@ function dfll_options() {
   }
 
   // variables for the field and option names 
-  
+   
   $opt_name = 'mt_favorite_color';
   $hidden_field_name = 'mt_submit_hidden';
   $data_field_name = 'mt_favorite_color';
@@ -151,8 +151,9 @@ function dfll_options() {
     <p>This section defines the behaviour of RSS entries of linked list posts. Default behaviour follows Daring Fireball.</p>
 
     <!-- TODO: Check boxes aren't saved / presented properly? -->
-    <p><input type="checkbox" name="link_goes_to" <?php $a = get_option('link_goes_to'); echo ($a=="") ? "checked" : $a;?> /> <strong>RSS link goes to linked item</strong>: Linked list entries point to the linked item in question, i.e. when you click on the link title in your RSS reader, your browser goes straight to that link.</p>
-    <p><input type="checkbox" name="show_glyph_after" <?php $a = get_option('show_glyph_after'); echo ($a=="") ? "checked" : $a;?> /> <strong>Show permalink text after linked list entries:</strong> At the bottom of each linked list blog post, there's a permalink bringing you back to your blog post. On DF, this is the star glyph.</p>
+    <p><input type="checkbox" name="link_goes_to" <?php $a = get_option('link_goes_to'); echo ($a=="") ? "checked" : $a;?> /> <strong>RSS link goes to linked item:</strong> <br>Linked list entries point to the linked item in question, i.e. when you click on the link title in your RSS reader, your browser goes straight to that link.</p>
+    <p><input type="checkbox" name="show_glyph_after" <?php $a = get_option('show_glyph_after'); echo ($a=="") ? "checked" : $a;?> /> <strong>Show permalink text after linked list entries:</strong> <br> At the bottom of each linked list blog post, there's a permalink bringing you back to your blog post. On DF, this is the star glyph.</p>
+    <!-- TODO: This doesn't seem to save -->
     <p>Permalink Text <input type="text" name="glyph_type" value="<?php $a = get_option('glyph_type');  echo ($a=="") ? "&#9733;" : $a; ?>" /></p>
 
     <!-- TODO: Can't print? -->
@@ -160,16 +161,14 @@ function dfll_options() {
 
     <h3>Title properties</h3>
     <p><input type="checkbox" name="show_glyph_before" value="<?php echo get_option('show_glyph_before'); ?>" /> Show glyph in front of non-linked-list article titles</p>
-    
-  <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
+    <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
+    <p><?php echo "Glyph:"; ?> 
+      <input type="text" name="<?php echo $data_field_name; ?>" value="<?php echo $opt_val; ?>" size="20">
+    </p>
 
-  <p><?php echo "Glyph:"; ?> 
-  <input type="text" name="<?php echo $data_field_name; ?>" value="<?php echo $opt_val; ?>" size="20">
-  </p><hr />
-
-  <p class="submit">
-  <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
-  </p>
+    <p class="submit">
+    <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
+    </p>
 
   </form>
   </div>
