@@ -114,7 +114,8 @@ function dfll_options() {
   <form name="df-form" method="post" action="">
 
   <div style="border:1px solid #aaa;margin:2em 1em 0.5em;background-color:#eee;padding:0 1em;">
-    <h3>Note</h3>
+    <h3>Notes</h3>
+	<p><strong>IMPORTANT</strong>: This page doesn't work yet! Sorry, I'm a bit new to git and pushed this up before it was ready...</p>
     <p>To enable linked list post behaviour, make sure you create a custom field called <strong>linked_list_url</strong> containing the link you want your post to go to. Other posts without this custom field will be treated as blog, or "regular", posts. If you don't know what custom fields are or how to set them, read the first few sections of <a href="http://www.rlmseo.com/blog/wordpress-custom-fields/">this article</a>.</p>
     <p>Glyphs are symbols (HTML entities) that can be displayed by most browsers. Some examples: &#9733; &#8594; &#8658; &nabla; &loz; &#10004; &#10010; &#10020; &#10022; &#9819; &#9820; (<a href="http://www.danshort.com/HTMLentities/index.php?w=maths">more here</a>). You can just copy and paste these into the fields below.</p>
 
