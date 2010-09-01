@@ -101,24 +101,27 @@ add_action('admin_menu', 'dfll_menu');
 
 // Initialise the settings
 function dfll_init() {
+//  register_setting("dfll_options", "link_goes_to");
 }
+add_action('admin_init', 'dfll_init');
 
 function dfll_options() {
 
   ?>
   
   <div class="wrap">
-  <div id="icon-options-general" class="icon32"><br /></div>
+  <div id="icon-options-general" class="icon32"><br></div>
   <h2>Daring Fireball-Style Linked List Plugin Settings</h2>
 
   <form name="df-form" method="post" action="">
 
-  <div style="border:1px solid #aaa;margin:2em 1em 0.5em;background-color:#eee;padding:0 1em;">
-    <h3>Notes</h3>
-	<p><strong>IMPORTANT</strong>: This page doesn't work yet! Sorry, I'm a bit new to git and pushed this up before it was ready...</p>
-    <p>To enable linked list post behaviour, make sure you create a custom field called <strong>linked_list_url</strong> containing the link you want your post to go to. Other posts without this custom field will be treated as blog, or "regular", posts. If you don't know what custom fields are or how to set them, read the first few sections of <a href="http://www.rlmseo.com/blog/wordpress-custom-fields/">this article</a>.</p>
-    <p>Glyphs are symbols (HTML entities) that can be displayed by most browsers. Some examples: &#9733; &#8594; &#8658; &nabla; &loz; &#10004; &#10010; &#10020; &#10022; &#9819; &#9820; (<a href="http://www.danshort.com/HTMLentities/index.php?w=maths">more here</a>). You can just copy and paste these into the fields below.</p>
-
+  <div style="border:1px solid #aaa;margin:2em 1em 0.5em;background-color:#eee;padding:0 1em 1em;">
+    <h3>Notes - Read First!</h3>
+    <ul style="margin-left: 1.5em; list-style-type:disc;">
+	  <li>Changing the settings on this page <em>only affects the behaviour of your RSS feeds</em>, i.e. it won't change the way your blog is displayed on the web. To change your blog's display properties, edit your theme to use the following functions: is_linked_list(), get_the_linked_list_link(), get_glyph() and get_the_permalink_glyph().</li>
+    <li>To enable linked list post behaviour, make sure you create a custom field called <strong>linked_list_url</strong> containing the link you want your post to go to. Other posts without this custom field will be treated as blog, or "regular", posts. If you don't know what custom fields are or how to set them, read the first few sections of <a href="http://www.rlmseo.com/blog/wordpress-custom-fields/">this article</a>.</li>
+    <li>Some glyphs (symbols) you can use: &#9733; &#8594; &#8658; &nabla; &loz; &#10004; &#10010; &#10020; &#10022; &#9819; &#9820; &raquo; &laquo; (<a href="http://www.danshort.com/HTMLentities/index.php?w=maths">more here</a>). You can just copy and paste these into the fields below.</li>
+    </ul>
   </div>
 
   <table class="form-table">
@@ -135,7 +138,7 @@ function dfll_options() {
     RSS link goes to linked item 
   </th>
   <td>
-    <input type="checkbox" name="link_goes_to" <?php $a = get_option('link_goes_to'); echo ($a=="") ? "checked" : $a;?> /> Linked list entries point to the linked item in question, i.e. when you click on the link title in your RSS reader, your browser goes straight to that link.
+    <input type="checkbox" name="link_goes_to" <?php $a = get_option('link_goes_to'); echo ($a=="") ? "checked" : $a;?> /> Linked list entries point to the linked item in question, i.e. when you click on the link title in your RSS reader, your browser opens that link instead of your blog permalink.
   </td>
   
   <tr valign="top">
@@ -143,8 +146,8 @@ function dfll_options() {
     Insert permalink after post
   </th>
   <td>
-    <input type="checkbox" name="show_glyph_after_post" <?php $a = get_option('show_glyph_after'); echo ($a=="") ? "checked" : $a;?> /> At the bottom of each linked list blog post, there's a permalink bringing you back to your blog post. On DF, this is ★.
-    <p>Text for permalink <input type="text" name="glyph_type" value="<?php $a = get_option('glyph_type');  echo ($a=="") ? "&#9733;" : $a; ?>" /></p>
+    <input type="checkbox" name="show_glyph_after_post" <?php $a = get_option('show_glyph_after_post'); echo ($a=="") ? "checked" : $a;?> /> At the bottom of each linked list blog post, show a permalink bringing you back to your blog post. On DF, this is ★. <em>Note for theme customizers</em>: this is the glyph returned in get_glyph() and get_the_permalink_glyph().<br>
+    <label for="show_glyph_after_post_text">Text for permalink:</label> <input type="text" name="show_glyph_after_post_text" value="<?php $a = get_option('show_glyph_after_post_text');  echo ($a=="") ? "&#9733;" : $a; ?>" />
   </td>
   </tr>
 
@@ -153,8 +156,11 @@ function dfll_options() {
     Highlight link posts
   </th>
   <td>
-    <input type="checkbox" name="glyph_before_link_title" <?php $a = get_option('show_glyph_after'); echo ($a=="") ? "checked" : $a;?> /> Show some text in front of linked-list article titles, e.g. "Link: ". This is useful if you want to distinguish these link posts from your regular blog posts, and may help readers figure out how to get to the link. 
-    <p>Text to display <input type="text" name="glyph_type" value="<?php $a = get_option('glyph_type');  echo ($a=="") ? "&#9733;" : $a; ?>" /></p>
+    <input type="checkbox" name="glyph_before_link_title" <?php $a = get_option('glyph_before_link_title'); echo ($a=="") ? "checked" : $a;?> /> Show text <em>before</em> linked-list article titles, e.g. "Link: ". This is useful if you want to distinguish these link posts from your regular blog posts, and may help readers figure out how to get to the link.<br>
+    <label for="glyph_before_link_title_text">Text to display:</label> <input type="text" name="glyph_before_link_title_text" value="<?php $a = get_option('glyph_before_link_title_text');  echo ($a=="") ? "Link: " : $a; ?>" />
+    <br><br>
+    <input type="checkbox" name="glyph_after_link_title" <?php $a = get_option('glyph_after_link_title'); echo ($a=="") ? "checked" : $a;?> /> Show text <em>after</em> linked-list article titles, e.g. "&raquo;". Also helps to distinguish link posts from your regular blog posts.<br>
+    <label for="glyph_after_link_title_text">Text to display:</label> <input type="text" name="glyph_after_link_title_text" value="<?php $a = get_option('glyph_after_link_title_text');  echo ($a=="") ? "&raquo;" : $a; ?>" />
   </td>
   </tr>
 
@@ -170,8 +176,8 @@ function dfll_options() {
     Highlight blog posts
   </th>
   <td>
-    <input type="checkbox" name="glyph_before_blog_title" <?php $a = get_option('show_glyph_after'); echo ($a=="") ? "checked" : $a;?> /> Show text in front of blog article titles in the RSS feed, to distinguish them from link posts &mdash; this is useful if you link more than you post. DF has a ★ in front of such articles.
-    <p>Text to display <input type="text" name="glyph_type" value="<?php $a = get_option('glyph_type');  echo ($a=="") ? "&#9733;" : $a; ?>" /></p>
+    <input type="checkbox" name="glyph_before_blog_title" <?php $a = get_option('glyph_before_blog_title'); echo ($a=="") ? "checked" : $a;?> /> Show text in front of blog article titles in the RSS feed, to distinguish them from link posts &mdash; this is useful if you link more than you post. DF has a ★ in front of such articles.<br>
+    <label for="glyph_before_blog_title_text">Text to display:</label> <input type="text" name="glyph_before_blog_title_text" value="<?php $a = get_option('glyph_before_blog_title_text');  echo ($a=="") ? "&#9733;" : $a; ?>" />
   </td>
   </tr>
 
