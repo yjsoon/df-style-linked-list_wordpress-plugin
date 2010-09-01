@@ -95,7 +95,7 @@ add_filter('the_title_rss', 'insert_title_glyph_rss');
 
 // Add the menu 
 function dfll_menu() {
-  add_options_page('DF-Style Linked List Options', 'DF-Style Linked List', 'manage_options', 'dfll-options', 'dfll_options');
+  add_options_page('DF-Style Linked List Options', 'DF-Style Linked List', 'manage_options', 'dfll', 'dfll_options_page');
 }
 add_action('admin_menu', 'dfll_menu');
 
@@ -105,7 +105,7 @@ function dfll_init() {
 }
 add_action('admin_init', 'dfll_init');
 
-function dfll_options() {
+function dfll_options_page() {
 
   ?>
   
