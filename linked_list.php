@@ -101,38 +101,23 @@ add_action('admin_menu', 'dfll_menu');
 
 // Initialise the settings
 function dfll_init() {
-//  register_setting("dfll_options", "link_goes_to");
+  register_setting("dfll_options", "dfll_options");
+  add_settings_section("dfll_ll", "", "dfll_text", "dfll");
 }
 add_action('admin_init', 'dfll_init');
 
-function dfll_options_page() {
-
-  ?>
-  
-  <div class="wrap">
-  <div id="icon-options-general" class="icon32"><br></div>
-  <h2>Daring Fireball-Style Linked List Plugin Settings</h2>
-
-  <form name="df-form" method="post" action="">
-
-  <div style="border:1px solid #aaa;margin:2em 1em 0.5em;background-color:#eee;padding:0 1em 1em;">
-    <h3>Notes - Read First!</h3>
-    <ul style="margin-left: 1.5em; list-style-type:disc;">
-	  <li>Changing the settings on this page <em>only affects the behaviour of your RSS feeds</em>, i.e. it won't change the way your blog is displayed on the web. To change your blog's display properties, edit your theme to use the following functions: is_linked_list(), get_the_linked_list_link(), get_glyph() and get_the_permalink_glyph().</li>
-    <li>To enable linked list post behaviour, make sure you create a custom field called <strong>linked_list_url</strong> containing the link you want your post to go to. Other posts without this custom field will be treated as blog, or "regular", posts. If you don't know what custom fields are or how to set them, read the first few sections of <a href="http://www.rlmseo.com/blog/wordpress-custom-fields/">this article</a>.</li>
-    <li>Some glyphs (symbols) you can use: &#9733; &#8594; &#8658; &nabla; &loz; &#10004; &#10010; &#10020; &#10022; &#9819; &#9820; &raquo; &laquo; (<a href="http://www.danshort.com/HTMLentities/index.php?w=maths">more here</a>). You can just copy and paste these into the fields below.</li>
-    </ul>
-  </div>
+function dfll_text() {
+?>
 
   <table class="form-table">
-  
+
   <tr valign="top">
   <th scope="row" colspan="2">
     <h3>Linked list properties</h3>
     <p>This section defines the behaviour of RSS entries of linked list posts. Default behaviour follows Daring Fireball.</p>
   </th>
   </tr>
-  
+
   <tr valign="top">
   <th scope="row">
     RSS link goes to linked item 
@@ -140,7 +125,7 @@ function dfll_options_page() {
   <td>
     <input type="checkbox" name="link_goes_to" <?php $a = get_option('link_goes_to'); echo ($a=="") ? "checked" : $a;?> /> Linked list entries point to the linked item in question, i.e. when you click on the link title in your RSS reader, your browser opens that link instead of your blog permalink.
   </td>
-  
+
   <tr valign="top">
   <th scope="row">
     Insert permalink after post
@@ -190,8 +175,31 @@ function dfll_options_page() {
   </tr>
   </table>
   
+<?php
+}
 
-  </form>
+function dfll_options_page() {
+
+  ?>
+  
+  <div class="wrap">
+    <div id="icon-options-general" class="icon32"><br></div>
+    <h2>Daring Fireball-Style Linked List Plugin Settings</h2>
+
+    <div style="border:1px solid #aaa;margin:2em 1em 0.5em;background-color:#eee;padding:0 1em 1em;">
+      <h3>Notes - Read First!</h3>
+      <ul style="margin-left: 1.5em; list-style-type:disc;">
+  	  <li>Changing the settings on this page <em>only affects the behaviour of your RSS feeds</em>, i.e. it won't change the way your blog is displayed on the web. To change your blog's display properties, edit your theme to use the following functions: is_linked_list(), get_the_linked_list_link(), get_glyph() and get_the_permalink_glyph().</li>
+      <li>To enable linked list post behaviour, make sure you create a custom field called <strong>linked_list_url</strong> containing the link you want your post to go to. Other posts without this custom field will be treated as blog, or "regular", posts. If you don't know what custom fields are or how to set them, read the first few sections of <a href="http://www.rlmseo.com/blog/wordpress-custom-fields/">this article</a>.</li>
+      <li>Some glyphs (symbols) you can use: &#9733; &#8594; &#8658; &nabla; &loz; &#10004; &#10010; &#10020; &#10022; &#9819; &#9820; &raquo; &laquo; (<a href="http://www.danshort.com/HTMLentities/index.php?w=maths">more here</a>). You can just copy and paste these into the fields below.</li>
+      </ul>
+    </div>
+
+    <form name="df-form" method="post" action="">
+      <?php settings_fields('dfll_options'); ?>
+      <?php do_settings_sections('dfll'); ?>
+    </form>
+  
   </div>
 
   <?php
