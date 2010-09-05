@@ -8,7 +8,6 @@ Version: 2.0
 Author URI: http://yjsoon.com
 */
 
-
 /*-----------------------------------------------------------------------------
   For theme developers - these should be all you need to refer to
 -----------------------------------------------------------------------------*/
@@ -219,6 +218,19 @@ function dfll_defaults_callback() {
   update_option('dfll_options', $arr);
 }
 
+/* Add help */
+function dfll_help() {
+  $help = '<h3>Some Notes</strong></h3>';
+  $help .= '<ul style="margin-left: 1.5em; list-style-type:disc;">';
+  $help .= "<li>Changing the settings on this page <em>only affects the behaviour of your RSS feeds</em>, i.e. it won't change the way your blog is displayed on the web. To change your blog's display properties, edit your theme to use the following functions: is_linked_list(), get_the_linked_list_link(), get_glyph() and get_the_permalink_glyph().</li>";
+  $help .= "<li>To enable linked list post behaviour, make sure you create a custom field called <strong>linked_list_url</strong> containing the link you want your post to go to. Other posts without this custom field will be treated as blog, or \"regular\", posts. If you don't know what custom fields are or how to set them, read the first few sections of <a href=\"http://www.rlmseo.com/blog/wordpress-custom-fields/\">this article</a>.</li>";
+  $help .= '<li>Some glyphs (symbols) you can use: &#9733; &#8594; &#8658; &nabla; &loz; &#10004; &#10010; &#10020; &#10022; &#9819; &#9820; &raquo; &laquo; (<a href="http://www.danshort.com/HTMLentities/index.php">more here</a>). You can just copy and paste these into the fields below.</li>';
+  $help .= "</ul>";
+  $help .="<p>For more information or to contact the author, please refer to the <a href=\"http://github.com/yjsoon/wordpress-linked-list-plugin\">plugin homepage</a>.</p>";
+  add_contextual_help('settings_page_dfll', $help ); 
+}
+add_action('admin_head-settings_page_dfll', "dfll_help");
+
 /* Actual options page rendering */
 
 function dfll_options_page() {
@@ -234,14 +246,12 @@ function dfll_options_page() {
     <div id="icon-options-general" class="icon32"><br></div>
     <h2>Daring Fireball-Style Linked List Plugin Settings</h2>
 
-    <div style="border:1px solid #aaa;margin:2em 0 1em;background-color:#eee;padding:0 1em 1em;">
+<!--
+    <div style="border:1px solid #aaa;margin:2em 0 1em;background-color:#eee;padding:0 1em 1em;" id="df-expl">
       <h3>Notes - Read First!</h3>
-      <ul style="margin-left: 1.5em; list-style-type:disc;">
-  	  <li>Changing the settings on this page <em>only affects the behaviour of your RSS feeds</em>, i.e. it won't change the way your blog is displayed on the web. To change your blog's display properties, edit your theme to use the following functions: is_linked_list(), get_the_linked_list_link(), get_glyph() and get_the_permalink_glyph().</li>
-      <li>To enable linked list post behaviour, make sure you create a custom field called <strong>linked_list_url</strong> containing the link you want your post to go to. Other posts without this custom field will be treated as blog, or "regular", posts. If you don't know what custom fields are or how to set them, read the first few sections of <a href="http://www.rlmseo.com/blog/wordpress-custom-fields/">this article</a>.</li>
-      <li>Some glyphs (symbols) you can use: &#9733; &#8594; &#8658; &nabla; &loz; &#10004; &#10010; &#10020; &#10022; &#9819; &#9820; &raquo; &laquo; (<a href="http://www.danshort.com/HTMLentities/index.php">more here</a>). You can just copy and paste these into the fields below.</li>
-      </ul>
     </div>
+-->
+    <p><em>Please take a look at the help drop down menu (up there &#8599; ) for more information on getting started.</em></p>
 
     <form name="df-form" method="post" action="options.php">
       <?php settings_fields('dfll_options'); ?>
