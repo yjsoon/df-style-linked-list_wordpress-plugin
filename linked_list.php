@@ -1,15 +1,10 @@
 <?php
-/**
- * @package DF-Style Linked List
- * @author YJ Soon
- * @version 1.1
- */
 /*
 Plugin Name: DF-Style Linked List
 Plugin URI: http://github.com/yjsoon/wordpress-linked-list-plugin
-Description: Adapted from Jonathan Penn's <a href="http://github.com/jonathanpenn/wordpress-linked-list-plugin">linked-list plugin</a> to make your blog's RSS feed behave even more like <a href="http://daringfireball.net">Daring Fireball</a>. To use, set the custom field "linked_list_url" to the desired location on a link post. In your RSS feed, the following will happen: (1) the permalink becomes the link destination; (ii) the actual permalink to your post is inserted as a star glyph at the end of your post; (iii) a star glyph is added to before your non-linked-list post titles. Also provides functions to customise your design by checking if the item is a linked list item, getting a permalink with glyph, etc. 
+Description: Make your blog's RSS feed behave like <a href="http://daringfireball.net">Daring Fireball</a>. To use, set the custom field "linked_list_url" to the desired location on a link post. See "DF-Style Linked List" under WordPress Settings for more options.
 Author: Yinjie Soon
-Version: 1.1
+Version: 2.0
 Author URI: http://yjsoon.com
 */
 
@@ -146,8 +141,9 @@ function glyph_after_post_callback() {
 function glyph_after_post_text_callback() { 
   $options = get_option('dfll_options');
   echo "<label for='input1'>Text for permalink: </label>";
-  if(!$options['glyph_after_post'] && $options['glyph_after_post_text']!="") { $style = ' style="color:#ccc;" '; }
-  echo "<input {$style} name='dfll_options[glyph_after_post_text]' size='12' type='text' value='{$options['glyph_after_post_text']}' id='input1' /> <span class='eg'>e.g. ★ or Permalink</span>";  
+  echo "<input name='dfll_options[glyph_after_post_text]' size='12' type='text' value='{$options['glyph_after_post_text']}' id='input1' /> <span class='eg'>e.g. ★ or Permalink. ";
+  if (!$options['glyph_after_post']) echo "Remember to check the checkbox above.";
+  echo "</span>";
 }
 
 function glyph_before_link_title_callback() {
@@ -160,8 +156,9 @@ function glyph_before_link_title_callback() {
 function glyph_before_link_title_text_callback() { 
   $options = get_option('dfll_options');
   echo "<label for='input2'>Text to display: </label>";
-  if(!$options['glyph_before_link_title'] && $options['glyph_before_link_title_text']!="") { $style = ' style="color:#ccc;" '; }
-  echo "<input {$style} name='dfll_options[glyph_before_link_title_text]' size='12' type='text' value='{$options['glyph_before_link_title_text']}' id='input2' /> <span class='eg'>e.g. Link: </span>";  
+  echo "<input {$style} name='dfll_options[glyph_before_link_title_text]' size='12' type='text' value='{$options['glyph_before_link_title_text']}' id='input2' /> <span class='eg'>e.g. Link:. ";
+  if (!$options['glyph_before_link_title']) echo "Remember to check the checkbox above.";
+  echo "</span>";
 }
 
 function glyph_after_link_title_callback() {
@@ -174,8 +171,9 @@ function glyph_after_link_title_callback() {
 function glyph_after_link_title_text_callback() { 
   $options = get_option('dfll_options');
   echo "<label for='input3'>Text to display: </label>";
-  if(!$options['glyph_after_link_title'] && $options['glyph_after_link_title_text']!="") { $style = ' style="color:#ccc;" '; }
-  echo "<input {$style} name='dfll_options[glyph_after_link_title_text]' size='12' type='text' value='{$options['glyph_after_link_title_text']}' id='input3' /> <span class='eg'>e.g. &raquo;</span>";  
+  echo "<input {$style} name='dfll_options[glyph_after_link_title_text]' size='12' type='text' value='{$options['glyph_after_link_title_text']}' id='input3' /> <span class='eg'>e.g. &raquo;. ";
+  if (!$options['glyph_after_link_title']) echo "Remember to check the checkbox above.";
+  echo "</span>";  
 }
 
 function glyph_before_blog_title_callback() {
@@ -188,8 +186,9 @@ function glyph_before_blog_title_callback() {
 function glyph_before_blog_title_text_callback() {
   $options = get_option('dfll_options');
   echo "<label for='input4'>Text to display: </label>";
-  if(!$options['glyph_before_blog_title'] && $options['glyph_before_blog_title_text']!="") { $style = ' style="color:#ccc;" '; }
-  echo "<input {$style} name='dfll_options[glyph_before_blog_title_text]' size='12' type='text' value='{$options['glyph_before_blog_title_text']}' id='input4' /> <span class='eg'>e.g. ★</span>";  
+  echo "<input {$style} name='dfll_options[glyph_before_blog_title_text]' size='12' type='text' value='{$options['glyph_before_blog_title_text']}' id='input4' /> <span class='eg'>e.g. ★. ";
+  if (!$options['glyph_before_blog_title']) echo "Remember to check the checkbox above.";
+  echo "</span>";  
 }
 
 /* Callback functions for main sections */
@@ -202,6 +201,23 @@ function dfll_text2() {
   echo "<p>This section defines the behaviour of RSS entries of blog posts (i.e., not links).</p>";  
 }
 
+/* Add default options */
+
+register_activation_hook(__FILE__, 'dfll_defaults_callback');
+// Define default option settings
+function dfll_defaults_callback() {
+  $arr = array("link_goes_to"=>"true", 
+               "glyph_after_post" => "true", 
+               "glyph_after_post_text" => "★", 
+               "glyph_before_link_title" => "", 
+               "glyph_before_link_title_text" => "", 
+               "glyph_after_link_title" => "", 
+               "glyph_after_link_title_text" => "", 
+               "glyph_before_blog_title" => "true", 
+               "glyph_before_blog_title_text" => "★"
+               );
+  update_option('dfll_options', $arr);
+}
 
 /* Actual options page rendering */
 
@@ -211,6 +227,7 @@ function dfll_options_page() {
   
   <style type="text/css" media="screen">
    .eg { color: #888; }
+   .append { color: #d66; }
   </style>
   
   <div class="wrap">
