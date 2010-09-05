@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DF-Style Linked List
-Plugin URI: http://github.com/yjsoon/wordpress-linked-list-plugin
+Plugin URI: http://github.com/yjsoon/df-style-linked-list_wordpress-plugin
 Description: Make your blog's RSS feed behave like <a href="http://daringfireball.net">Daring Fireball</a>. To use, set the custom field "linked_list_url" to the desired location on a link post. See "DF-Style Linked List" under WordPress Settings for more options.
 Author: Yinjie Soon
 Version: 2.0
@@ -225,8 +225,9 @@ function dfll_help() {
   $help .= "<li>Changing the settings on this page <em>only affects the behaviour of your RSS feeds</em>, i.e. it won't change the way your blog is displayed on the web. To change your blog's display properties, edit your theme to use the following functions: is_linked_list(), get_the_linked_list_link(), get_glyph() and get_the_permalink_glyph().</li>";
   $help .= "<li>To enable linked list post behaviour, make sure you create a custom field called <strong>linked_list_url</strong> containing the link you want your post to go to. Other posts without this custom field will be treated as blog, or \"regular\", posts. If you don't know what custom fields are or how to set them, read the first few sections of <a href=\"http://www.rlmseo.com/blog/wordpress-custom-fields/\">this article</a>.</li>";
   $help .= '<li>Some glyphs (symbols) you can use: &#9733; &#8594; &#8658; &nabla; &loz; &#10004; &#10010; &#10020; &#10022; &#9819; &#9820; &raquo; &laquo; (<a href="http://www.danshort.com/HTMLentities/index.php">more here</a>). You can just copy and paste these into the fields below.</li>';
+  $help .= '<li>For theme designers, these are the functions that you can use: get_the_permalink_glyph(), the_permalink_glyph(), get_the_linked_list_link(), the_linked_list_link(), get_glyph() and is_linked_list().</li>';
   $help .= "</ul>";
-  $help .="<p>For more information or to contact the author, please refer to the <a href=\"http://github.com/yjsoon/wordpress-linked-list-plugin\">plugin homepage</a>.</p>";
+  $help .="<p>For more information or to contact the author, please refer to the <a href=\"http://github.com/yjsoon/df-style-linked-list_wordpress-plugin\">plugin homepage</a>.</p>";
   add_contextual_help('settings_page_dfll', $help ); 
 }
 add_action('admin_head-settings_page_dfll', "dfll_help");
