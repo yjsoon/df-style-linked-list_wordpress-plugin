@@ -1,4 +1,4 @@
-=== WordPress DF-style Linked List Plugin ===
+=== Daring Fireball-style Linked List Plugin ===
 Contributors: yjsoon
 Donate link: http://yjsoon.com/dfll-plugin
 Tags: links, rss, wordpress, linkblogs, linked-list
