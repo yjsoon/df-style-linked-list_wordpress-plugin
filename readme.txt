@@ -4,7 +4,7 @@ Donate link: http://yjsoon.com/dfll-plugin
 Tags: links, rss, wordpress, linkblogs, linked-list
 Requires at least: 2.7
 Tested up to: 3.0
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 
 Make your RSS feed for linked-list posts behave like Daring Fireball's: item's RSS permalink goes to link, and other modifications.
 
@@ -70,6 +70,9 @@ The changes could take a while to show up. Google Reader took a day to register 
 
 = 2.0 =
 * Initial public release on WordPress plugins
+
+= 2.0.3 =
+* Recommending users use HTML character entities instead of symbols for URL compatibility
 
 == License ==
 
