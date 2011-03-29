@@ -59,7 +59,6 @@ function ensure_rss_linked_list($value) {
   }
 }
 
-// Now set function up to execute when the admin_footer action is called
 add_action('the_permalink_rss', 'ensure_rss_linked_list');
 
 
@@ -73,7 +72,7 @@ function insert_permalink_glyph_rss($content) {
   }
   return $content;
 }
-add_filter('the_content', 'insert_permalink_glyph_rss');
+//add_filter('the_content', 'insert_permalink_glyph_rss');
 add_filter('the_excerpt_rss', 'insert_permalink_glyph_rss');
 
 // Inject permalink glyph into RSS title
@@ -265,5 +264,55 @@ function dfll_options_page() {
   <?php
 
 }
+
+/*-----------------------------------------------------------------------------
+  Bracket matching users -- allow you to enter [ll]http://google.com[/ll] in 
+  your post, and have it set to the linked_list_url. NOTE: Works in WordPress
+  web interface only!!!
+
+  Adapted from Slugger+, by Justin Blanton: http://hypertext.net/lab/sluggerplus
+-----------------------------------------------------------------------------*/
+
+// This function will filter out the DF link (enclosed in [ll][/ll]), save it to the 
+// custom variable linked_list_url, and strip away the link in the post.
+function dfll_get_link($post_content) {
+  $dflink = dfll_find_link($post_content);
+  if ($dflink) {
+    global $post;
+    $post_id = $post->ID;
+    update_post_meta($post_id, 'linked_list_url', $dflink);
+  }
+  $temp = '/(' . dfll_regesc('[ll]') . '(.*?)' . dfll_regesc('[/ll]') . ')/i';
+  $post_content = (preg_replace($temp, '', $post_content));
+  return $post_content;
+}
+
+// Helper function to find the link.
+function dfll_find_link($text) {
+  $postname = '/(' . dfll_regesc('[ll]') . '(.*?)' . dfll_regesc('[/ll]') . ')/i';
+  preg_match_all($postname, $text, $matches);
+    
+  if ($matches) {
+    foreach ($matches[2] as $match) {
+      if ($match) {
+          return $match;
+      }
+    }
+  }
+  return false;
+}
+
+// Helper function to identify the regex
+function dfll_regesc($str) {
+  $str = str_replace('\\', '\\\\', $str);
+  $str = str_replace('/', '\\/', $str);
+  $str = str_replace('[', '\\[', $str);
+  $str = str_replace(']', '\\]', $str);
+  return $str;
+}
+
+// Add the filter before the content is saved.
+add_filter('content_save_pre', 'dfll_get_link', 999); 
+
 
 ?>

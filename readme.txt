@@ -3,8 +3,8 @@ Contributors: yjsoon
 Donate link: http://yjsoon.com/dfll-plugin
 Tags: links, rss, wordpress, linkblogs, linked-list
 Requires at least: 2.7
-Tested up to: 3.0
-Stable tag: 2.0.3
+Tested up to: 3.1
+Stable tag: 2.0.4
 
 Make your RSS feed for linked-list posts behave like Daring Fireball's: item's RSS permalink goes to link, and other modifications.
 
@@ -19,6 +19,8 @@ To use, set the custom field "linked_list_url" to the desired location on a link
 (iii) a star glyph is added in front of your non-linked-list post titles. Behaviour is customisable in options.
 
 All three parts are customizable, and you can use different glyphs or text if you'd like. For theme designers, the plugin also provides functions (get_the_permalink_glyph(), the_permalink_glyph(), get_the_linked_list_link(), the_linked_list_link(), get_glyph() and is_linked_list()) to customise your design by checking if the item is a linked list item, getting a permalink with glyph, etc.
+
+When posting from the WordPress web interface, add [ll]http://link[/ll] to insert a link to the URL enclosed in [ll] and [/ll]. This doesn't work from the "Press This" bookmarklet right now, nor from any external clients, which makes it of limited use... but I'll update it when I figure out how to get it to work.
 
 Adapted from Jonathan Penn's [Wordpress Linked List plugin](http://github.com/jonathanpenn/wordpress-linked-list-plugin). 
 
@@ -73,6 +75,10 @@ The changes could take a while to show up. Google Reader took a day to register 
 
 = 2.0.3 =
 * Recommending users use HTML character entities instead of symbols for URL compatibility
+
+= 2.0.4 =
+* When posting from the WordPress web interface, add [ll]http://link[/ll] to insert a link to the URL enclosed in [ll] and [/ll]. 
+* Please note that this doesn't work from the "Press This" bookmarklet right now, nor from any external clients, which makes it of limited use... but I'll update it when I figure out how to get it to work.
 
 == License ==
 
