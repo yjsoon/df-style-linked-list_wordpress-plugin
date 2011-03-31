@@ -4,13 +4,17 @@ Donate link: http://yjsoon.com/dfll-plugin
 Tags: links, rss, wordpress, linkblogs, linked-list
 Requires at least: 2.7
 Tested up to: 3.1
-Stable tag: 2.0.4
+Stable tag: 2.5
 
 Make your RSS feed for linked-list posts behave like Daring Fireball's: item's RSS permalink goes to link, and other modifications.
 
 == Description ==
 
-This plugin makes your RSS feed for linked-list posts (indicated using a custom field) behave like [Daring Fireball](http://daringfireball.net). 
+This plugin now has two parts.
+
+_Part One_
+
+Makes your RSS feed for linked-list posts (indicated using a custom field) behave like [Daring Fireball](http://daringfireball.net). 
 
 To use, set the custom field "linked_list_url" to the desired location on a link post. In your RSS feed, the following will happen: 
 
@@ -20,9 +24,24 @@ To use, set the custom field "linked_list_url" to the desired location on a link
 
 All three parts are customizable, and you can use different glyphs or text if you'd like. For theme designers, the plugin also provides functions (get_the_permalink_glyph(), the_permalink_glyph(), get_the_linked_list_link(), the_linked_list_link(), get_glyph() and is_linked_list()) to customise your design by checking if the item is a linked list item, getting a permalink with glyph, etc.
 
-When posting from the WordPress web interface, add [ll]http://link[/ll] to insert a link to the URL enclosed in [ll] and [/ll]. This doesn't work from the "Press This" bookmarklet right now, nor from any external clients, which makes it of limited use... but I'll update it when I figure out how to get it to work.
-
 Adapted from Jonathan Penn's [Wordpress Linked List plugin](http://github.com/jonathanpenn/wordpress-linked-list-plugin). 
+
+_Part Two_
+
+Add link from post content. This feature allows you to set the custom field "linked_list_url" from within the post content. This is especially handy for using with the 'Press This' bookmarklet.
+
+When you activate this feature, the DFLL plugin will look at the first line of your post content for a link anchor, and it'll set that link as the linked_list_url for your post. For example, the following post content:
+
+> &lt;a href='http://google.com'&gt;Google!!!&lt;/a&gt;.
+> This is a link post to Google.
+
+... will have its first line removed, the URL http://google.com passed into the custom field linked_list_url, and will have its first line removed to just end up with the text 'This is a link post to Google'. The text in the anchor ('Google!!!') will be ignored.
+
+It's very important to note three requirements: (i) the anchor tag must be in the first line of the post, (ii) the tag must be the only element on that line, and (iii) the line must end in a period. This is the syntax that the 'Press This' bookmarklet uses, so you can just hit 'Press This' and enter to go to the next line and stop typing.
+
+Any text in the anchor will be ignored, and the entire first line will be discarded. This also means that if, for whatever, reason, you like posting link anchors that end in periods as the first line of your blog, you shouldn't activate this checkbox, or you'll end up with linked list posts by accident!
+
+This was adapted from [CF Setter by Justin Blanton](http://hypertext.net/projects/cfsetter). 
 
 Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).  
 
@@ -57,16 +76,22 @@ Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).
 * Basically, use the `is_linked_list()` function to check. And then alter your template the way you wish to make it look or act differently.
 * Other functions you can use are `get_the_permalink_glyph()`, `the_permalink_glyph()`, `get_the_linked_list_link()`, `the_linked_list_link()` and `get_glyph()`.
 * For more information about customizing wordpress templates, view the "Template Tags" document on the [Wordpress Codex](http://codex.wordpress.org/Template_Tags)
+* To enable the first link functionality, turn it on in the checkbox under Settings.
 
 == Usage ==
 
-When adding a link, create a normal blog post, but add a custom field "linked_list_url" with the desired link URL. The RSS feed item will automatically point to that URL.
+* When adding a link, create a normal blog post, but add a custom field "linked_list_url" with the desired link URL. The RSS feed item will automatically point to that URL.
+* When posting, to insert a link without setting the custom field manually, put your URL wrapped in an anchor tag in the first line, ending with a period. For example: &lt;a href="http://yjsoon.com"&gt;Doesn't matter what's in here&lt;/a&gt;.
 
 == Frequently Asked Questions ==
 
 = Why doesn't my RSS feed change immediately? =
 
 The changes could take a while to show up. Google Reader took a day to register changes in my feed settings. If you want to test, add your RSS feed to [My Yahoo](http://my.yahoo.com) and refresh it with the "options" pane -- this updated the most reliably for me while testing.
+
+= Why doesn't the new link posting work? =
+
+You have to enable it in the options page, and also make sure you insert an anchor tag link on the first line which __ends in a period (dot)__.
 
 == Changelog ==
 
@@ -80,9 +105,13 @@ The changes could take a while to show up. Google Reader took a day to register 
 * When posting from the WordPress web interface, add [ll]http://link[/ll] to insert a link to the URL enclosed in [ll] and [/ll]. 
 * Please note that this doesn't work from the "Press This" bookmarklet right now, nor from any external clients, which makes it of limited use... but I'll update it when I figure out how to get it to work.
 
+= 2.0.5 =
+* Added functionality to set the linked list URL custom field with an anchor tag link in the first line.
+* Removed the ability to post a linked list URL with [ll] and [/ll]. If you'd like to do that, use Justin Blanton's [CF Setter](http://hypertext.net/projects/cfsetter) instead.
+
 == License ==
 
-Copyright (c) 2010 YJ Soon
+Copyright (c) 2010-2011 YJ Soon
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

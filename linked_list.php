@@ -4,9 +4,17 @@ Plugin Name: DF-Style Linked List
 Plugin URI: http://github.com/yjsoon/df-style-linked-list_wordpress-plugin
 Description: Make your blog's RSS feed behave like <a href="http://daringfireball.net">Daring Fireball</a>. To use, set the custom field "linked_list_url" to the desired location on a link post. See "DF-Style Linked List" under WordPress Settings for more options.
 Author: Yinjie Soon
-Version: 2.0
+Version: 2.1
 Author URI: http://yjsoon.com/dfll-plugin
 */
+
+
+/*-----------------------------------------------------------------------------
+  Customisable 
+-----------------------------------------------------------------------------*/
+
+// Change this if you want to use something other than linked_list_url for your custom field.
+$GLOBALS['dfllCustomField'] = "linked_list_url";
 
 /*-----------------------------------------------------------------------------
   For theme developers - these should be all you need to refer to
@@ -22,7 +30,8 @@ function the_permalink_glyph() {
 
 // To display the linked list URL
 function get_the_linked_list_link() {
-  $url = get_post_custom_values("linked_list_url");
+  global $dfllCustomField;
+  $url = get_post_custom_values($dfllCustomField);
   return $url[0];
 }
 function the_linked_list_link() {
@@ -39,8 +48,9 @@ function get_glyph() {
 // Called to see if the current post in the loop is a linked list
 function is_linked_list() {
   global $wp_query;
+  global $dfllCustomField;
   $postid = $wp_query->post->ID;
-  $url = get_post_meta($postid, 'linked_list_url', true);
+  $url = get_post_meta($postid, $dfllCustomField, true);
   return (!empty($url));
 }
 
@@ -72,6 +82,8 @@ function insert_permalink_glyph_rss($content) {
   }
   return $content;
 }
+
+// Deprecated:
 //add_filter('the_content', 'insert_permalink_glyph_rss');
 add_filter('the_excerpt_rss', 'insert_permalink_glyph_rss');
 
@@ -115,7 +127,10 @@ function dfll_init() {
   add_settings_section("dfll_main2", "Blog Post Properties", "dfll_text2", "dfll");
   add_settings_field("glyph_before_blog_title", "Highlight blog post titles", "glyph_before_blog_title_callback", "dfll", "dfll_main2");
   add_settings_field("glyph_before_blog_title_text", "", "glyph_before_blog_title_text_callback", "dfll", "dfll_main2");
-  
+  add_settings_section("dfll_main3", "Linking From Posts", "dfll_text3", "dfll");
+  add_settings_field("use_first_link", "Use first link in post", "use_first_link_callback", "dfll", "dfll_main3");
+  // add_settings_field("use_cf_setter_link", "Use CF Setter [ll] link", "use_cf_setter_link_callback", "dfll", "dfll_main3");
+  // add_settings_field("delimiter_for_cf_setter_link", "", "delimiter_for_cf_setter_link_callback248", "dfll", "dfll_main3");
 }
 add_action('admin_init', 'dfll_init');
 
@@ -189,6 +204,29 @@ function glyph_before_blog_title_text_callback() {
   echo "</span>";  
 }
 
+function use_first_link_callback() {
+  $options = get_option('dfll_options');
+  if($options['use_first_link']) { $checked = ' checked="checked" ';}
+  echo "<input " . $checked . " name='dfll_options[use_first_link]' type='checkbox' />";
+  echo " <strong>Warning</strong>: Please read the instructions below carefully before enabling this feature!";
+  echo "<div style='padding-left: 1em; border-left: 4px solid #bbb; margin-top: 0.5em'>";
+  echo "<h3>Very Important Instructions You Should Really Read Before Enabling This</h3>";
+  echo "<p>This feature allows you to set the linked_list_url custom field from within the post content. This is especially handy for using with the 'Press This' bookmarklet.</p>"; 
+  echo "<p>When you activate this feature, the DFLL plugin will look at the first line of your post content for a link anchor, and it'll set that link as the linked_list_url for your post. For example, the following post content:</p>";
+  echo "<pre style='border:1px solid #999; margin-left: 1em; padding: 1em; width: 40%; background: #eee; margin-bottom: 1em;'>&lt;a href='http://google.com'&gt;Google!!!&lt;/a&gt;.\nThis is a link post to Google.</pre>";
+  echo "<p>... will have its first line removed, the URL http://google.com passed into the custom field <em>linked_list_url</em>, and will have its first line removed to just end up with the text 'This is a link post to Google'. The text in the anchor ('Google!!!') will be ignored.</p>";
+  echo "<p>It's very important to note three requirements: (i) the anchor tag must be in the first line of the post, (ii) the tag must be the only element on that line, and (iii) the line <strong>must end in a period</strong>. This is the syntax that the 'Press This' bookmarklet uses, so you can just hit 'Press This' and enter to go to the next line and stop typing.</p>";
+  echo "<p>Worth noting again: Any text in the anchor will be ignored, and the entire first line will be discarded. This also means that if, for whatever, reason, you like posting link anchors that end in periods as the first line of your blog, you shouldn't activate this checkbox, or you'll end up with linked list posts by accident!</p>"; 
+  echo "</div>";
+}
+
+function use_cf_setter_link_callback() {
+
+}
+
+function delimiter_for_cf_setter_link_callback() {
+}
+
 /* Callback functions for main sections */
 
 function dfll_text() {
@@ -197,6 +235,10 @@ function dfll_text() {
 
 function dfll_text2() {
   echo "<p>This section defines the behaviour of RSS entries of blog posts (i.e., not links).</p>";  
+}
+
+function dfll_text3() {
+  echo "<p>This section allows you to enable the posting of linked_list_url links from <em>within</em> your posts, so you don't have to set the custom field yourself.</p>";
 }
 
 /* Add default options */
@@ -212,7 +254,10 @@ function dfll_defaults_callback() {
                "glyph_after_link_title" => "", 
                "glyph_after_link_title_text" => "", 
                "glyph_before_blog_title" => "true", 
-               "glyph_before_blog_title_text" => "&#9733;"
+               "glyph_before_blog_title_text" => "&#9733;",
+               "use_first_link" => "false"
+               // "use_cf_setter_link" => "false",
+               // "delimiter_for_cf_setter_link" => "ll"
                );
   update_option('dfll_options', $arr);
 }
@@ -266,53 +311,124 @@ function dfll_options_page() {
 }
 
 /*-----------------------------------------------------------------------------
-  Bracket matching users -- allow you to enter [ll]http://google.com[/ll] in 
-  your post, and have it set to the linked_list_url. NOTE: Works in WordPress
-  web interface only!!!
+  Allows you to post by putting in a link anchor in the first line of your
+  post content, as long as it's the only element on that line, and it ends in 
+  a period.
 
-  Adapted from Slugger+, by Justin Blanton: http://hypertext.net/lab/sluggerplus
+  Adapted from CF Setter by Justin Blanton: http://hypertext.net/projects/cfsetter 
+  Thanks, Justin! You rock.
 -----------------------------------------------------------------------------*/
 
-// This function will filter out the DF link (enclosed in [ll][/ll]), save it to the 
-// custom variable linked_list_url, and strip away the link in the post.
-function dfll_get_link($post_content) {
-  $dflink = dfll_find_link($post_content);
-  if ($dflink) {
-    global $post;
-    $post_id = $post->ID;
-    update_post_meta($post_id, 'linked_list_url', $dflink);
-  }
-  $temp = '/(' . dfll_regesc('[ll]') . '(.*?)' . dfll_regesc('[/ll]') . ')/i';
-  $post_content = (preg_replace($temp, '', $post_content));
-  return $post_content;
-}
+/* dfll_customField_getValue
+* Reads in the post content, finds the custom field value you want to use and sets it as a global variable.
+* @param STRING
+* @return STRING
+*/
+function dfll_customField_getValue($post_content) {
 
-// Helper function to find the link.
-function dfll_find_link($text) {
-  $postname = '/(' . dfll_regesc('[ll]') . '(.*?)' . dfll_regesc('[/ll]') . ')/i';
-  preg_match_all($postname, $text, $matches);
-    
-  if ($matches) {
-    foreach ($matches[2] as $match) {
-      if ($match) {
-          return $match;
+    // This is Justin's code for posting using [ll]URL[/ll].   
+    // $customFieldValue = dfll_customField_findValue($post_content);
+    // if ($customFieldValue) {
+    //     $GLOBALS['dfllCustomFieldValue'] = $customFieldValue;
+    // }   
+    // $temp = '/(' . dfll_customField_regExEscape('[ll]') . '(.*?)' . dfll_customField_regExEscape('[/ll]') . ')/i';
+    // $post_content = (preg_replace($temp, '', $post_content));
+
+    $options = get_option('dfll_options');
+ 
+    if ($options['use_first_link']) { // TODO: change to get_option
+
+      $split_post_content = explode("\n", $post_content);
+      // First, check if this is the only link on the line -- the line starts with <a href, ends with </a>.
+      // (includes dot, and optionally a carriage return) 
+      $reg = '/^(\\<p\\>)?\\<a href[^<]*\\<\\/a\\>\\.(\r)?$/';
+      if (preg_match($reg, $split_post_content[0])) { // found it! Let's goooooooo
+
+        // Open up a HTML parser (no regular expressions here!) and extract the href
+        $d = new DOMDocument();
+        $d->loadHTML("<html>".$split_post_content[0]."</html>");
+        foreach ($d->getElementsByTagName('a') as $tag) {
+          $link = $tag->getAttribute('href');
+          break; // Should only be one... but whatever, just get out. I wish node(0) worked.
+        }
+        $link = substr($link, 2, -1); // Strip the "s. But why start at 2?!?!
+        // Set the custom field value to that link.
+        $GLOBALS['dfllCustomFieldValue'] = $link;
+
+        // Now to clear and reconstruct the entire post_content, sans first line. Yes, we're getting
+        // rid of the entire first line. This is why we have to be sure there's nothing else there!
+        $post_content = ""; 
+        for ($i=1; $i<count($split_post_content); $i++) {
+          $post_content .= $split_post_content[$i];
+        }
+        
       }
+
     }
-  }
-  return false;
+
+    return $post_content;
 }
 
-// Helper function to identify the regex
-function dfll_regesc($str) {
-  $str = str_replace('\\', '\\\\', $str);
-  $str = str_replace('/', '\\/', $str);
-  $str = str_replace('[', '\\[', $str);
-  $str = str_replace(']', '\\]', $str);
-  return $str;
+/* dfll_customField_setValue
+* Sets the custom field value.
+* @param STRING
+*/
+function dfll_customField_setValue($post_id) {
+    global $dfllCustomFieldValue;
+    global $dfllCustomField;
+    
+    // Insert the custom field value, if it isn't already inserted
+    if ($dfllCustomFieldValue) {
+        add_post_meta($post_id, $dfllCustomField, $dfllCustomFieldValue, true);
+    }
 }
 
-// Add the filter before the content is saved.
-add_filter('content_save_pre', 'dfll_get_link', 999); 
+/* dfll_customField_findValue
+* Sifts through the post content, finds the custom field value and returns it
+* @param STRING
+* @return STRING
+*/
+// Not used
+function dfll_customField_findValue($text) {
+    
+    $cfRegEX = '/(' . dfll_customField_regExEscape('[ll]') . '(.*?)' . dfll_customField_regExEscape('[/ll]') . ')/i';
+    
+    preg_match_all($cfRegEX, $text, $matches);
+    
+    if ($matches) {
+        foreach ($matches[2] as $match) {
+            if ($match) {
+                return $match;
+            }
+        }
+    } else {
+        // Do nothing
+        return false;
+    }
+}
 
+/* dfll_customField_regExEscape
+* Escapes for the regular expression.
+* @param STRING
+* @return STRING
+*/
+// Not used
+function dfll_customField_regExEscape($str) {
+    $str = str_replace('\\', '\\\\', $str);
+    $str = str_replace('/', '\\/', $str);
+    $str = str_replace('[', '\\[', $str);
+    $str = str_replace(']', '\\]', $str);
+    $str = str_replace('<', '\\<', $str);
+    $str = str_replace('>', '\\>', $str);
+    $str = str_replace('=', '\\=', $str);
+    $str = str_replace('.', '\\.', $str);
 
+return $str;
+}
+
+// Grab the custom field value and save to a global
+add_filter('content_save_pre', 'dfll_customField_getValue'); 
+// Insert the custom field value into the post's metadata
+add_action('save_post', 'dfll_customField_setValue');
 ?>
+
