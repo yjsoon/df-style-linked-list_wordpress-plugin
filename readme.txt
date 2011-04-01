@@ -4,7 +4,7 @@ Donate link: http://yjsoon.com/dfll-plugin
 Tags: links, rss, wordpress, linkblogs, linked-list
 Requires at least: 2.7
 Tested up to: 3.1
-Stable tag: 2.5
+Stable tag: 2.5.2
 
 Make your RSS feed for linked-list posts behave like Daring Fireball's: item's RSS permalink goes to link, and other modifications.
 
@@ -98,16 +98,24 @@ You have to enable it in the options page, and also make sure you insert an anch
 = 2.0 =
 * Initial public release on WordPress plugins
 
-= 2.0.3 =
-* Recommending users use HTML character entities instead of symbols for URL compatibility
-
 = 2.0.4 =
 * When posting from the WordPress web interface, add [ll]http://link[/ll] to insert a link to the URL enclosed in [ll] and [/ll]. 
 * Please note that this doesn't work from the "Press This" bookmarklet right now, nor from any external clients, which makes it of limited use... but I'll update it when I figure out how to get it to work.
 
-= 2.0.5 =
+= 2.5 =
 * Added functionality to set the linked list URL custom field with an anchor tag link in the first line.
 * Removed the ability to post a linked list URL with [ll] and [/ll]. If you'd like to do that, use Justin Blanton's [CF Setter](http://hypertext.net/projects/cfsetter) instead.
+
+= 2.5.2 =
+* Critical stability update -- the previous version was causing some issues on certain installs. If you have any problems, please look for me on [Twitter](http://twitter.com/yjsoon). 
+
+== Upgrade Notice ==
+
+= 2.5.1 =
+This version adds a major new feature -- you can now set the linked_list_url field without going into WordPress's custom fields menu. See [plugin homepage](http://yjsoon.com/dfll-plugin) for details.
+
+= 2.5.2 =
+Critical stability update -- the previous version was causing some issues on certain installs. If you have any problems, please look for me on [Twitter](http://twitter.com/yjsoon). 
 
 == License ==
 

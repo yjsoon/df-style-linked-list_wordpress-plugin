@@ -4,17 +4,9 @@ Plugin Name: DF-Style Linked List
 Plugin URI: http://github.com/yjsoon/df-style-linked-list_wordpress-plugin
 Description: Make your blog's RSS feed behave like <a href="http://daringfireball.net">Daring Fireball</a>. To use, set the custom field "linked_list_url" to the desired location on a link post. See "DF-Style Linked List" under WordPress Settings for more options.
 Author: Yinjie Soon
-Version: 2.1
+Version: 2.5
 Author URI: http://yjsoon.com/dfll-plugin
 */
-
-
-/*-----------------------------------------------------------------------------
-  Customisable 
------------------------------------------------------------------------------*/
-
-// Change this if you want to use something other than linked_list_url for your custom field.
-$GLOBALS['dfllCustomField'] = "linked_list_url";
 
 /*-----------------------------------------------------------------------------
   For theme developers - these should be all you need to refer to
@@ -30,8 +22,7 @@ function the_permalink_glyph() {
 
 // To display the linked list URL
 function get_the_linked_list_link() {
-  global $dfllCustomField;
-  $url = get_post_custom_values($dfllCustomField);
+  $url = get_post_custom_values('linked_list_url');
   return $url[0];
 }
 function the_linked_list_link() {
@@ -48,9 +39,8 @@ function get_glyph() {
 // Called to see if the current post in the loop is a linked list
 function is_linked_list() {
   global $wp_query;
-  global $dfllCustomField;
   $postid = $wp_query->post->ID;
-  $url = get_post_meta($postid, $dfllCustomField, true);
+  $url = get_post_meta($postid, 'linked_list_url', true);
   return (!empty($url));
 }
 
@@ -326,15 +316,7 @@ function dfll_options_page() {
 */
 function dfll_customField_getValue($post_content) {
 
-    // This is Justin's code for posting using [ll]URL[/ll].   
-    // $customFieldValue = dfll_customField_findValue($post_content);
-    // if ($customFieldValue) {
-    //     $GLOBALS['dfllCustomFieldValue'] = $customFieldValue;
-    // }   
-    // $temp = '/(' . dfll_customField_regExEscape('[ll]') . '(.*?)' . dfll_customField_regExEscape('[/ll]') . ')/i';
-    // $post_content = (preg_replace($temp, '', $post_content));
-
-    $options = get_option('dfll_options');
+   $options = get_option('dfll_options');
  
     if ($options['use_first_link']) { // TODO: change to get_option
 
@@ -375,55 +357,11 @@ function dfll_customField_getValue($post_content) {
 */
 function dfll_customField_setValue($post_id) {
     global $dfllCustomFieldValue;
-    global $dfllCustomField;
     
     // Insert the custom field value, if it isn't already inserted
     if ($dfllCustomFieldValue) {
-        add_post_meta($post_id, $dfllCustomField, $dfllCustomFieldValue, true);
+        add_post_meta($post_id, 'linked_list_url', $dfllCustomFieldValue, true);
     }
-}
-
-/* dfll_customField_findValue
-* Sifts through the post content, finds the custom field value and returns it
-* @param STRING
-* @return STRING
-*/
-// Not used
-function dfll_customField_findValue($text) {
-    
-    $cfRegEX = '/(' . dfll_customField_regExEscape('[ll]') . '(.*?)' . dfll_customField_regExEscape('[/ll]') . ')/i';
-    
-    preg_match_all($cfRegEX, $text, $matches);
-    
-    if ($matches) {
-        foreach ($matches[2] as $match) {
-            if ($match) {
-                return $match;
-            }
-        }
-    } else {
-        // Do nothing
-        return false;
-    }
-}
-
-/* dfll_customField_regExEscape
-* Escapes for the regular expression.
-* @param STRING
-* @return STRING
-*/
-// Not used
-function dfll_customField_regExEscape($str) {
-    $str = str_replace('\\', '\\\\', $str);
-    $str = str_replace('/', '\\/', $str);
-    $str = str_replace('[', '\\[', $str);
-    $str = str_replace(']', '\\]', $str);
-    $str = str_replace('<', '\\<', $str);
-    $str = str_replace('>', '\\>', $str);
-    $str = str_replace('=', '\\=', $str);
-    $str = str_replace('.', '\\.', $str);
-
-return $str;
 }
 
 // Grab the custom field value and save to a global
@@ -431,4 +369,3 @@ add_filter('content_save_pre', 'dfll_customField_getValue');
 // Insert the custom field value into the post's metadata
 add_action('save_post', 'dfll_customField_setValue');
 ?>
-
