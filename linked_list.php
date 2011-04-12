@@ -73,8 +73,7 @@ function insert_permalink_glyph_rss($content) {
   return $content;
 }
 
-// Deprecated:
-//add_filter('the_content', 'insert_permalink_glyph_rss');
+add_filter('the_content', 'insert_permalink_glyph_rss');
 add_filter('the_excerpt_rss', 'insert_permalink_glyph_rss');
 
 // Inject permalink glyph into RSS title
