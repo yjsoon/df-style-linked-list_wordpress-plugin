@@ -4,7 +4,7 @@ Plugin Name: DF-Style Linked List
 Plugin URI: http://github.com/yjsoon/df-style-linked-list_wordpress-plugin
 Description: Make your blog's RSS feed behave like <a href="http://daringfireball.net">Daring Fireball</a>. To use, set the custom field "linked_list_url" to the desired location on a link post. See "DF-Style Linked List" under WordPress Settings for more options.
 Author: Yinjie Soon
-Version: 2.5
+Version: 2.6
 Author URI: http://yjsoon.com/dfll-plugin
 */
 
@@ -53,7 +53,7 @@ function is_linked_list() {
 function ensure_rss_linked_list($value) {
   $options = get_option('dfll_options');
   if ($options['link_goes_to'] && is_linked_list()) {
-    echo get_the_linked_list_link();
+    echo '<![CDATA[' . get_the_linked_list_link() . ']]>';
   } else {
     echo $value;
   }
@@ -85,6 +85,8 @@ function insert_title_glyph_rss($title) {
   elseif (is_linked_list()) { // if linked list title
     if ($options['glyph_before_link_title']) $title  = $options['glyph_before_link_title_text'] . " " . $title;
     if ($options['glyph_after_link_title']) $title = $title . " " . $options['glyph_after_link_title_text'];
+
+		$title = '<![CDATA[' . $title . ']]>';
   }
 
   return $title;
