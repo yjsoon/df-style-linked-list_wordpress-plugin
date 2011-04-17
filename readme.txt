@@ -4,13 +4,13 @@ Donate link: http://yjsoon.com/dfll-plugin
 Tags: links, rss, wordpress, linkblogs, linked-list
 Requires at least: 2.7
 Tested up to: 3.1
-Stable tag: 2.5.3
+Stable tag: 2.7
 
 Make your RSS feed for linked-list posts behave like Daring Fireball's: item's RSS permalink goes to link, and other modifications.
 
 == Description ==
 
-This plugin now has two parts.
+This plugin makes your RSS feed behave like Daring Fireball's linked list posts, and has some extra features to make posting linked lists easier. Also supports Twitter Tools.
 
 _Part One_
 
@@ -42,6 +42,10 @@ It's very important to note three requirements: (i) the anchor tag must be in th
 Any text in the anchor will be ignored, and the entire first line will be discarded. This also means that if, for whatever, reason, you like posting link anchors that end in periods as the first line of your blog, you shouldn't activate this checkbox, or you'll end up with linked list posts by accident!
 
 This was adapted from [CF Setter by Justin Blanton](http://hypertext.net/projects/cfsetter). 
+
+_Twitter Tools support_
+
+If you're using [Twitter Tools](http://crowdfavorite.com/wordpress/plugins/twitter-tools/), you can customise your tweets to have your custom glyph or text appear before either your "regular" or linked-list posts.
 
 Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).  
 
@@ -76,7 +80,7 @@ Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).
 * Basically, use the `is_linked_list()` function to check. And then alter your template the way you wish to make it look or act differently.
 * Other functions you can use are `get_the_permalink_glyph()`, `the_permalink_glyph()`, `get_the_linked_list_link()`, `the_linked_list_link()` and `get_glyph()`.
 * For more information about customizing wordpress templates, view the "Template Tags" document on the [Wordpress Codex](http://codex.wordpress.org/Template_Tags)
-* To enable the first link functionality, turn it on in the checkbox under Settings.
+* To enable the first link and Twitter Tools functionality or find out more, turn them on in the checkbox under Settings.
 
 == Usage ==
 
@@ -98,16 +102,19 @@ You have to enable it in the options page, and also make sure you insert an anch
 = 2.0 =
 * Initial public release on WordPress plugins
 
-= 2.0.4 =
-* When posting from the WordPress web interface, add [ll]http://link[/ll] to insert a link to the URL enclosed in [ll] and [/ll]. 
-* Please note that this doesn't work from the "Press This" bookmarklet right now, nor from any external clients, which makes it of limited use... but I'll update it when I figure out how to get it to work.
-
 = 2.5 =
 * Added functionality to set the linked list URL custom field with an anchor tag link in the first line.
 * Removed the ability to post a linked list URL with [ll] and [/ll]. If you'd like to do that, use Justin Blanton's [CF Setter](http://hypertext.net/projects/cfsetter) instead.
 
-= 2.5.2 =
+= 2.5.4 =
 * Critical stability update -- the previous version was causing some issues on certain installs. If you have any problems, please look for me on [Twitter](http://twitter.com/yjsoon). 
+* Fixed permalink glyph not appearing.
+
+= 2.6 =
+* CDATA fix -- RSS should now validate. Thanks to @pyrmont for the fix.
+
+= 2.7 =
+* Twitter Tools support.
 
 == Upgrade Notice ==
 
@@ -119,6 +126,12 @@ Critical stability update -- the previous version was causing some issues on cer
 
 = 2.5.3 =
 Bugfix for permalink glyph not showing up at end of posts. Sorry about that.
+
+= 2.6 =
+* CDATA fix -- RSS should now validate. Thanks to @pyrmont for the fix.
+
+= 2.7 =
+* Twitter Tools support.
 
 == License ==
 
