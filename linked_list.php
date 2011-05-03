@@ -355,7 +355,7 @@ function dfll_customField_getValue($post_content) {
         // rid of the entire first line. This is why we have to be sure there's nothing else there!
         $post_content = ""; 
         for ($i=1; $i<count($split_post_content); $i++) {
-          $post_content .= $split_post_content[$i];
+          $post_content .= $split_post_content[$i] . "\n";
         }
         
       }
