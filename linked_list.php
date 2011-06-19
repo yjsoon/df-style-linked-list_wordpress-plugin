@@ -12,10 +12,18 @@ Author URI: http://yjsoon.com/dfll-plugin
   For theme developers - these should be all you need to refer to
 -----------------------------------------------------------------------------*/
 
-// To display a permalink around the glyph
+// Just returns the glyph (this is set in the option under "Text for permalink")
+function get_glyph() {
+  $options = get_option('dfll_options');  
+  return $options['glyph_after_post_text'];
+  //return '&#9733;';
+}
+
+// To display the glyph with a permalink around it
 function get_the_permalink_glyph() {
   return '<a href="' . get_permalink() . '" rel="bookmark" title="Permanent link to \''.get_the_title().'\'" class="glyph">'. get_glyph() .'</a>';
 }
+// Same as above but echoes it
 function the_permalink_glyph() {
   echo get_the_permalink_glyph();
 }
@@ -25,15 +33,9 @@ function get_the_linked_list_link() {
   $url = get_post_custom_values('linked_list_url');
   return $url[0];
 }
+// Same as above but echoes it
 function the_linked_list_link() {
   echo get_the_linked_list_link();
-}
-
-// Just returns the glyph (this is set in the option under "Text for permalink")
-function get_glyph() {
-  $options = get_option('dfll_options');  
-  return $options['glyph_after_post_text'];
-  //return '&#9733;';
 }
 
 // Called to see if the current post in the loop is a linked list

@@ -54,7 +54,8 @@ Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).
 * Upload `linked-list.php` to the `/wp-content/plugins/` directory
 * Activate the plugin through the `Plugins` menu in WordPress
 * Customise extra text in your link titles and body in Settings -> DF-Style Linked List.
-* Templates can be customised by using the provided functions to check whether your are rendering a linked list item or not. For example:
+* To customize the theme, use the child theme provided, or check out my [theme customization instructions](http://yjsoon.com/2011/02/customising-your-wordpress-theme-for-the-df-linked-list-plugin).
+* Some basic instructions follow: Templates can be customised by using the provided functions to check whether your are rendering a linked list item or not. For example:
 <code>
    ....the top part of a template....
    <?php if (have_posts()): ?>
@@ -77,7 +78,7 @@ Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).
     <?php endif; ?>
     ...the rest of the template...
 </code>
-* Basically, use the `is_linked_list()` function to check. And then alter your template the way you wish to make it look or act differently.
+* Essentially, use the `is_linked_list()` function to check, then alter your template the way you wish to make it look or act differently.
 * Other functions you can use are `get_the_permalink_glyph()`, `the_permalink_glyph()`, `get_the_linked_list_link()`, `the_linked_list_link()` and `get_glyph()`.
 * For more information about customizing wordpress templates, view the "Template Tags" document on the [Wordpress Codex](http://codex.wordpress.org/Template_Tags)
 * To enable the first link and Twitter Tools functionality or find out more, turn them on in the checkbox under Settings.
@@ -96,6 +97,10 @@ The changes could take a while to show up. Google Reader took a day to register 
 = Why doesn't the new link posting work? =
 
 You have to enable it in the options page, and also make sure you insert an anchor tag link on the first line which __ends in a period (dot)__.
+
+= This doesn't work! My blog looks the same! =
+
+You still have to customize your theme to make it look right. Please refer to [this blog entry](http://yjsoon.com/2011/02/customising-your-wordpress-theme-for-the-df-linked-list-plugin) for more information.
 
 == Changelog ==
 

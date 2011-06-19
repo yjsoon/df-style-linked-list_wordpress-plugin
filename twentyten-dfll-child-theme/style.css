@@ -1,0 +1,16 @@
+/*
+Theme Name:     Twenty Ten DF Linked List edition
+Theme URI:      http://yjsoon.com/dfll-plugin
+Description:    Child theme for the Twenty Ten theme, for use with DF Linked List plugin 
+Author:         YJ Soon
+Author URI:     http: //yjsoon.com/
+Template:       twentyten
+Version:        0.1.0
+*/
+
+@import url("../twentyten/style.css");
+
+.linked-list-item a {
+  font-weight: normal;
+  color: blue !important;
+}
