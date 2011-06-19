@@ -4,7 +4,7 @@ Donate link: http://yjsoon.com/dfll-plugin
 Tags: links, rss, wordpress, linkblogs, linked-list
 Requires at least: 2.7
 Tested up to: 3.1
-Stable tag: 2.7.1
+Stable tag: 2.7.3
 
 Make your RSS feed for linked-list posts behave like Daring Fireball's: item's RSS permalink goes to link, and other modifications.
 
@@ -124,6 +124,9 @@ You still have to customize your theme to make it look right. Please refer to [t
 = 2.7.1 =
 * Bugfix for newlines not appearing when using post with first-line.
 
+= 2.7.3 =
+* Included child theme and instructions.
+
 == Upgrade Notice ==
 
 = 2.5.1 =
@@ -141,7 +144,7 @@ Bugfix for permalink glyph not showing up at end of posts. Sorry about that.
 = 2.7 =
 * Twitter Tools support.
 
-= 2.7.1 =
+= 2.7.3 =
 * Included child theme and instructions.
 
 == License ==
