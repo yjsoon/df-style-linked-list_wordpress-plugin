@@ -141,6 +141,9 @@ Bugfix for permalink glyph not showing up at end of posts. Sorry about that.
 = 2.7 =
 * Twitter Tools support.
 
+= 2.7.1 =
+* Included child theme and instructions.
+
 == License ==
 
 Copyright (c) 2010-2011 YJ Soon
