@@ -97,13 +97,28 @@ add_filter('the_title_rss', 'insert_title_glyph_rss');
 
 // Add the menu 
 function dfll_menu() {
-  add_options_page('Linked List Options', 'Linked List', 'manage_options', 'dfll', 'dfll_options_page');
+	global $dfll_adminpage;
+  $dfll_adminpage = add_options_page('Linked List Options', 'Linked List', 'manage_options', 'dfll', 'dfll_options_page');
+  add_action("admin_head-$dfll_adminpage", "dfll_help");
+  
 }
 add_action('admin_menu', 'dfll_menu');
 
 // Initialise the settings
 function dfll_init() {
-  register_setting("dfll_options", "dfll_options",'dfll_sanitize_checkbox');
+	register_setting('dfll_options','dfll_link_goes_to');
+	register_setting('dfll_options','dfll_glyph_after_post');
+	register_setting('dfll_options','dfll_glyph_after_post_text');
+	register_setting('dfll_options','dfll_glyph_before_link_title');
+	register_setting('dfll_options','dfll_glyph_before_link_title_text');
+	register_setting('dfll_options','dfll_glyph_after_link_title');
+	register_setting('dfll_options','dfll_glyph_after_link_title_text');
+	register_setting('dfll_options','dfll_glyph_before_blog_title');
+	register_setting('dfll_options','dfll_glyph_before_blog_title_text');
+	register_setting('dfll_options','dfll_use_first_link');
+	register_setting('dfll_options','dfll_twitter_glyph_before_linked_list');
+	register_setting('dfll_options','dfll_twitter_glyph_before_non_linked_list');
+  
   add_settings_section("dfll_main", "Linked List Properties", "dfll_text", "dfll");
   add_settings_field("link_goes_to", "RSS link goes to linked item", "link_goes_to_callback", "dfll", "dfll_main");
   add_settings_field("glyph_after_post", "Insert permalink after post", "glyph_after_post_callback", "dfll", "dfll_main");
@@ -251,6 +266,8 @@ function dfll_defaults_callback() {
 	update_option('dfll_twitter_glyph_before_non_linked_list','');
 }
 
+
+
 function dfll_sanitize_checkbox($options) {
   $dfll_off = array("link_goes_to"=>false, 
                             "glyph_after_post" => false, 
@@ -267,6 +284,12 @@ function dfll_sanitize_checkbox($options) {
 
 /* Add help */
 function dfll_help() {
+	global $dfll_adminpage;
+	$screen = get_current_screen();
+  if ($screen->id != $dfll_adminpage ) {
+	  return;
+  }
+  
   $help = '<h3>Some Notes</strong></h3>';
   $help .= '<ul style="margin-left: 1.5em; list-style-type:disc;">';
   $help .= "<li>Changing the settings on this page <em>only affects the behaviour of your RSS feeds</em>, i.e. it won't change the way your blog is displayed on the web. To change your blog's display properties, edit your theme to use the following functions: is_linked_list(), get_the_linked_list_link(), get_glyph() and get_the_permalink_glyph().</li>";
@@ -275,9 +298,10 @@ function dfll_help() {
   $help .= '<li>For theme designers, these are the functions that you can use: get_the_permalink_glyph(), the_permalink_glyph(), get_the_linked_list_link(), the_linked_list_link(), get_glyph() and is_linked_list().</li>';
   $help .= "</ul>";
   $help .="<p>For more information or to contact the author, please refer to the <a href=\"http://github.com/yjsoon/df-style-linked-list_wordpress-plugin\">plugin homepage</a>.</p>";
-  get_current_screen()->add_help_tab('settings_page_dfll', $help ); 
+  
+  
+  $screen->add_help_tab(array('settings_page_dfll','Linked List Help',$help)); 
 }
-add_action('admin_head-settings_page_dfll', "dfll_help");
 
 /* Actual options page rendering */
 
@@ -391,7 +415,6 @@ add_action('save_post', 'dfll_customField_setValue',2);
 function dfll_tweet($tweet) {
   global $post;
   global $dfllCustomFieldValue; // in case it was added using the first-line method
-  $options = get_option('dfll_options');  
   $url = get_post_meta($post->ID, 'linked_list_url', true);
 
   if (empty($url) && empty($dfllCustomFieldValue)) { // not a linked list item
