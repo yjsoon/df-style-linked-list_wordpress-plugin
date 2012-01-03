@@ -154,12 +154,14 @@ function glyph_after_post_text_callback() {
 
 function glyph_before_link_title_callback() {
   $options = get_option('dfll_options');
+  $checked = '';
   if($options['glyph_before_link_title']) { $checked = ' checked="checked" '; }
   echo "<input " . $checked . " name='dfll_options[glyph_before_link_title]' type='checkbox' />";
   echo " Show text <em>before</em> linked-list article titles, e.g. <em>Link: </em>. This is useful if you want to distinguish these link posts from your regular blog posts, and may help readers figure out how to get to the link.";
 }
 
 function glyph_before_link_title_text_callback() { 
+  $style = '';
   $options = get_option('dfll_options');
   echo "<label for='input2'>Link title text to display: </label>";
   echo "<input {$style} name='dfll_options[glyph_before_link_title_text]' size='12' type='text' value='{$options['glyph_before_link_title_text']}' id='input2' /> <span class='eg'>e.g. Link:. ";
@@ -175,6 +177,7 @@ function glyph_after_link_title_callback() {
 }
 
 function glyph_after_link_title_text_callback() { 
+  $style = '';
   $options = get_option('dfll_options');
   echo "<label for='input3'>Post-link text to display: </label>";
   echo "<input {$style} name='dfll_options[glyph_after_link_title_text]' size='12' type='text' value='{$options['glyph_after_link_title_text']}' id='input3' /> <span class='eg'>e.g. &amp;raquo; (&raquo;). ";
@@ -183,6 +186,7 @@ function glyph_after_link_title_text_callback() {
 }
 
 function glyph_before_blog_title_callback() {
+  $checked = '';
   $options = get_option('dfll_options');
   if($options['glyph_before_blog_title']) { $checked = ' checked="checked" '; }
   echo "<input " . $checked . " name='dfll_options[glyph_before_blog_title]' type='checkbox' />";
@@ -190,6 +194,7 @@ function glyph_before_blog_title_callback() {
 }
 
 function glyph_before_blog_title_text_callback() {
+  $style = '';
   $options = get_option('dfll_options');
   echo "<label for='input4'>Text to display: </label>";
   echo "<input {$style} name='dfll_options[glyph_before_blog_title_text]' size='12' type='text' value='{$options['glyph_before_blog_title_text']}' id='input4' /> <span class='eg'>e.g. &amp;#9733; (★). ";
@@ -198,6 +203,7 @@ function glyph_before_blog_title_text_callback() {
 }
 
 function use_first_link_callback() {
+  $checked = '';
   $options = get_option('dfll_options');
   if($options['use_first_link']) { $checked = ' checked="checked" ';}
   echo "<input " . $checked . " name='dfll_options[use_first_link]' type='checkbox' />";
@@ -214,6 +220,7 @@ function use_first_link_callback() {
 }
 
 function twitter_glyph_before_non_callback() {
+  $checked = '';	
   $options = get_option('dfll_options');
   if($options['twitter_glyph_before_non_linked_list']) { $checked = ' checked="checked" ';}
   echo "<input " . $checked . " name='dfll_options[twitter_glyph_before_non_linked_list]' type='checkbox' />";
@@ -222,6 +229,7 @@ function twitter_glyph_before_non_callback() {
 }
 
 function twitter_glyph_before_callback() {
+  $checked = '';	
   $options = get_option('dfll_options');
   if($options['twitter_glyph_before_linked_list']) { $checked = ' checked="checked" ';}
   echo "<input " . $checked . " name='dfll_options[twitter_glyph_before_linked_list]' type='checkbox' />";
