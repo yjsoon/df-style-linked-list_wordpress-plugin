@@ -12,30 +12,28 @@ Author URI: http://yjsoon.com/dfll-plugin
   For theme developers - these should be all you need to refer to
 -----------------------------------------------------------------------------*/
 
-// Just returns the glyph (this is set in the option under "Text for permalink")
-function get_glyph() {
-  $options = get_option('dfll_options');  
-  return $options['glyph_after_post_text'];
-  //return '&#9733;';
-}
-
-// To display the glyph with a permalink around it
+// To display a permalink around the glyph
 function get_the_permalink_glyph() {
   return '<a href="' . get_permalink() . '" rel="bookmark" title="Permanent link to \''.get_the_title().'\'" class="glyph">'. get_glyph() .'</a>';
 }
-// Same as above but echoes it
 function the_permalink_glyph() {
   echo get_the_permalink_glyph();
 }
 
 // To display the linked list URL
 function get_the_linked_list_link() {
-  $url = get_post_custom_values('linked_list_url');
+  $url = get_post_custom_values("linked_list_url");
   return $url[0];
 }
-// Same as above but echoes it
 function the_linked_list_link() {
   echo get_the_linked_list_link();
+}
+
+// Just returns the glyph (this is set in the option under "Text for permalink")
+function get_glyph() {
+  $options = get_option('dfll_options');  
+  return $options['glyph_after_post_text'];
+  //return '&#9733;';
 }
 
 // Called to see if the current post in the loop is a linked list
@@ -46,6 +44,7 @@ function is_linked_list() {
   return (!empty($url));
 }
 
+
 /*-----------------------------------------------------------------------------
   RSS modification handling functions
 -----------------------------------------------------------------------------*/
@@ -54,13 +53,13 @@ function is_linked_list() {
 function ensure_rss_linked_list($value) {
   $options = get_option('dfll_options');
   if ($options['link_goes_to'] && is_linked_list()) {
-    // Thanks to @pyrmont for the patch here and below.
     echo '<![CDATA[' . get_the_linked_list_link() . ']]>';
   } else {
     echo $value;
   }
 }
 
+// Now set function up to execute when the admin_footer action is called
 add_action('the_permalink_rss', 'ensure_rss_linked_list');
 
 
@@ -74,12 +73,11 @@ function insert_permalink_glyph_rss($content) {
   }
   return $content;
 }
-
 add_filter('the_content', 'insert_permalink_glyph_rss');
 add_filter('the_excerpt_rss', 'insert_permalink_glyph_rss');
 
 // Inject permalink glyph into RSS title
-function insert_title_glyph_rss($title) {
+function insert_title_glyph_rss($title,$cdata=true) {
   $options = get_option('dfll_options');
   if (!is_linked_list() && $options['glyph_before_blog_title']) { // if normal blog title
     $title = $options['glyph_before_blog_title_text'] . " " . $title;
@@ -87,7 +85,7 @@ function insert_title_glyph_rss($title) {
   elseif (is_linked_list()) { // if linked list title
     if ($options['glyph_before_link_title']) $title  = $options['glyph_before_link_title_text'] . " " . $title;
     if ($options['glyph_after_link_title']) $title = $title . " " . $options['glyph_after_link_title_text'];
-    $title = '<![CDATA[' . $title . ']]>';
+    if ($cdata) $title = '<![CDATA[' . $title . ']]>';
   }
 
   return $title;
@@ -101,13 +99,13 @@ add_filter('the_title_rss', 'insert_title_glyph_rss');
 
 // Add the menu 
 function dfll_menu() {
-  add_options_page('DF-Style Linked List Options', 'DF-Style Linked List', 'manage_options', 'dfll', 'dfll_options_page');
+  add_options_page('Linked List Options', 'Linked List', 'manage_options', 'dfll', 'dfll_options_page');
 }
 add_action('admin_menu', 'dfll_menu');
 
 // Initialise the settings
 function dfll_init() {
-  register_setting("dfll_options", "dfll_options");
+  register_setting("dfll_options", "dfll_options",'dfll_sanitize_checkbox');
   add_settings_section("dfll_main", "Linked List Properties", "dfll_text", "dfll");
   add_settings_field("link_goes_to", "RSS link goes to linked item", "link_goes_to_callback", "dfll", "dfll_main");
   add_settings_field("glyph_after_post", "Insert permalink after post", "glyph_after_post_callback", "dfll", "dfll_main");
@@ -119,11 +117,7 @@ function dfll_init() {
   add_settings_section("dfll_main2", "Blog Post Properties", "dfll_text2", "dfll");
   add_settings_field("glyph_before_blog_title", "Highlight blog post titles", "glyph_before_blog_title_callback", "dfll", "dfll_main2");
   add_settings_field("glyph_before_blog_title_text", "", "glyph_before_blog_title_text_callback", "dfll", "dfll_main2");
-  add_settings_section("dfll_main3", "Linking From Posts", "dfll_text3", "dfll");
-  add_settings_field("use_first_link", "Use first link in post", "use_first_link_callback", "dfll", "dfll_main3");
-  add_settings_section("dfll_main4", "Twitter Tools integration", "dfll_text4", "dfll");
-  add_settings_field("twitter_glyph_before_non_linked_list", "Insert glyph before non-linked list items in tweets", "twitter_glyph_before_non_callback", "dfll", "dfll_main4");
-  add_settings_field("twitter_glyph_before_linked_list", "Insert glyph before linked list items in tweets", "twitter_glyph_before_callback", "dfll", "dfll_main4");
+  
 }
 add_action('admin_init', 'dfll_init');
 
@@ -131,6 +125,7 @@ add_action('admin_init', 'dfll_init');
 /* Callback functions to display each of the options */
 
 function link_goes_to_callback() {
+  $checked = "";
   $options = get_option('dfll_options');
   if($options['link_goes_to']) { $checked = ' checked="checked" '; }
   echo "<input " . $checked . " name='dfll_options[link_goes_to]' type='checkbox' />";
@@ -138,10 +133,11 @@ function link_goes_to_callback() {
 }
 
 function glyph_after_post_callback() {
+  $checked = "";
   $options = get_option('dfll_options');
   if($options['glyph_after_post']) { $checked = ' checked="checked" '; }
   echo "<input " . $checked . " name='dfll_options[glyph_after_post]' type='checkbox' />";
-  echo " At the bottom of each linked list blog post, show a permalink bringing you back to your blog post. On DF, this is ★ (which you should enter as &amp;#9733;). <em>Note for theme customizers</em>: this is what's returned in <code>get_glyph()</code> (just the text) and <code>get_the_permalink_glyph()</code> (text wrapped inside an anchor).";
+  echo " At the bottom of each linked list blog post, show a permalink bringing you back to your blog post. On DF, this is ★ (which you should enter as &amp;#9733;). <em>Note for theme customizers</em>: this is what's returned in get_glyph() (just the text) and get_the_permalink_glyph() (text wrapped inside an anchor).";
 }
 
 function glyph_after_post_text_callback() { 
@@ -153,6 +149,7 @@ function glyph_after_post_text_callback() {
 }
 
 function glyph_before_link_title_callback() {
+  $checked = "";
   $options = get_option('dfll_options');
   $checked = '';
   if($options['glyph_before_link_title']) { $checked = ' checked="checked" '; }
@@ -163,13 +160,14 @@ function glyph_before_link_title_callback() {
 function glyph_before_link_title_text_callback() { 
   $style = '';
   $options = get_option('dfll_options');
-  echo "<label for='input2'>Link title text to display: </label>";
-  echo "<input {$style} name='dfll_options[glyph_before_link_title_text]' size='12' type='text' value='{$options['glyph_before_link_title_text']}' id='input2' /> <span class='eg'>e.g. Link:. ";
+  echo "<label for='input2'>Text to display: </label>";
+  echo "<input name='dfll_options[glyph_before_link_title_text]' size='12' type='text' value='{$options['glyph_before_link_title_text']}' id='input2' /> <span class='eg'>e.g. Link:. ";
   if (!$options['glyph_before_link_title']) echo "Remember to check the checkbox above.";
   echo "</span>";
 }
 
 function glyph_after_link_title_callback() {
+  $checked = "";
   $options = get_option('dfll_options');
   if($options['glyph_after_link_title']) { $checked = ' checked="checked" '; }
   echo "<input " . $checked . " name='dfll_options[glyph_after_link_title]' type='checkbox' />";
@@ -179,14 +177,14 @@ function glyph_after_link_title_callback() {
 function glyph_after_link_title_text_callback() { 
   $style = '';
   $options = get_option('dfll_options');
-  echo "<label for='input3'>Post-link text to display: </label>";
-  echo "<input {$style} name='dfll_options[glyph_after_link_title_text]' size='12' type='text' value='{$options['glyph_after_link_title_text']}' id='input3' /> <span class='eg'>e.g. &amp;raquo; (&raquo;). ";
+  echo "<label for='input3'>Text to display: </label>";
+  echo "<input name='dfll_options[glyph_after_link_title_text]' size='12' type='text' value='{$options['glyph_after_link_title_text']}' id='input3' /> <span class='eg'>e.g. &amp;raquo; (&raquo;). ";
   if (!$options['glyph_after_link_title']) echo "Remember to check the checkbox above.";
   echo "</span>";  
 }
 
 function glyph_before_blog_title_callback() {
-  $checked = '';
+  $checked = "";
   $options = get_option('dfll_options');
   if($options['glyph_before_blog_title']) { $checked = ' checked="checked" '; }
   echo "<input " . $checked . " name='dfll_options[glyph_before_blog_title]' type='checkbox' />";
@@ -197,7 +195,7 @@ function glyph_before_blog_title_text_callback() {
   $style = '';
   $options = get_option('dfll_options');
   echo "<label for='input4'>Text to display: </label>";
-  echo "<input {$style} name='dfll_options[glyph_before_blog_title_text]' size='12' type='text' value='{$options['glyph_before_blog_title_text']}' id='input4' /> <span class='eg'>e.g. &amp;#9733; (★). ";
+  echo "<input name='dfll_options[glyph_before_blog_title_text]' size='12' type='text' value='{$options['glyph_before_blog_title_text']}' id='input4' /> <span class='eg'>e.g. &amp;#9733; (★). ";
   if (!$options['glyph_before_blog_title']) echo "Remember to check the checkbox above.";
   echo "</span>";  
 }
@@ -237,7 +235,6 @@ function twitter_glyph_before_callback() {
 
 }
 
-
 /* Callback functions for main sections */
 
 function dfll_text() {
@@ -248,32 +245,38 @@ function dfll_text2() {
   echo "<p>This section defines the behaviour of RSS entries of blog posts (i.e., not links).</p>";  
 }
 
-function dfll_text3() {
-  echo "<p>This section allows you to enable the posting of linked_list_url links from <em>within</em> your posts, so you don't have to set the custom field yourself.</p>";
-}
-
-function dfll_text4() {
-  echo "<p>This section customises whether your glyph shows up in auto-tweets. You must have the <a href='http://wordpress.org/extend/plugins/twitter-tools/'>Twitter Tools</a> plugin installed. If you want to remove Twitter Tool's built-in tweet prefix, read instructions at <a href='http://www.papajojo.com/how-to-remove-tweet-prefix-from-twitter-tools-wordpress-plugin/'>this link</a>, but please use with caution if you're both tweeting your blog posts and blogging your tweets!</p>";
-}
 /* Add default options */
 
 register_activation_hook(__FILE__, 'dfll_defaults_callback');
 // Define default option settings
+
+
 function dfll_defaults_callback() {
-  $arr = array("link_goes_to"=>"true", 
-               "glyph_after_post" => "true", 
+  $arr = array("link_goes_to"=>true, 
+               "glyph_after_post" => true, 
                "glyph_after_post_text" => "&#9733;", 
-               "glyph_before_link_title" => "", 
+               "glyph_before_link_title" => false, 
                "glyph_before_link_title_text" => "", 
-               "glyph_after_link_title" => "", 
+               "glyph_after_link_title" => false, 
                "glyph_after_link_title_text" => "", 
-               "glyph_before_blog_title" => "true", 
-               "glyph_before_blog_title_text" => "&#9733;",
-               "use_first_link" => "true", 
-               "twitter_glyph_before_linked_list" => "",
-               "twitter_glyph_before_non_linked_list" => ""
+               "glyph_before_blog_title" => true, 
+               "glyph_before_blog_title_text" => "&#9733;"
                );
   update_option('dfll_options', $arr);
+}
+
+function dfll_sanitize_checkbox($options) {
+  $dfll_off = array("link_goes_to"=>false, 
+                            "glyph_after_post" => false, 
+                            "glyph_after_post_text" => "", 
+                            "glyph_before_link_title" => false, 
+                            "glyph_before_link_title_text" => "", 
+                            "glyph_after_link_title" => false, 
+                            "glyph_after_link_title_text" => "", 
+                            "glyph_before_blog_title" => false, 
+                            "glyph_before_blog_title_text" => ""
+                            );
+  return array_merge($dfll_off,$options);
 }
 
 /* Add help */
@@ -323,100 +326,5 @@ function dfll_options_page() {
   <?php
 
 }
-
-/*-----------------------------------------------------------------------------
-  Allows you to post by putting in a link anchor in the first line of your
-  post content, as long as it's the only element on that line, and it ends in 
-  a period.
-
-  Adapted from CF Setter by Justin Blanton: http://hypertext.net/projects/cfsetter 
-  Thanks, Justin! You rock.
------------------------------------------------------------------------------*/
-
-/* dfll_customField_getValue
-* Reads in the post content, finds the custom field value you want to use and sets it as a global variable.
-* @param STRING
-* @return STRING
-*/
-function dfll_customField_getValue($post_content) {
-
-   $options = get_option('dfll_options');
- 
-    if ($options['use_first_link']) { // TODO: change to get_option
-
-      $split_post_content = explode("\n", $post_content);
-      // First, check if this is the only link on the line -- the line starts with <a href, ends with </a>.
-      // (includes dot, and optionally a carriage return) 
-      $reg = '/^(\\<p\\>)?\\<a href[^<]*\\<\\/a\\>\\.(\r)?$/';
-      if (preg_match($reg, $split_post_content[0])) { // found it! Let's goooooooo
-
-        // Open up a HTML parser (no regular expressions here!) and extract the href
-        $d = new DOMDocument();
-        $d->loadHTML("<html>".$split_post_content[0]."</html>");
-        foreach ($d->getElementsByTagName('a') as $tag) {
-          $link = $tag->getAttribute('href');
-          break; // Should only be one... but whatever, just get out. I wish node(0) worked.
-        }
-        $link = substr($link, 2, -1); // Strip the "s. But why start at 2?!?!
-        // Set the custom field value to that link.
-        $GLOBALS['dfllCustomFieldValue'] = $link;
-
-        // Now to clear and reconstruct the entire post_content, sans first line. Yes, we're getting
-        // rid of the entire first line. This is why we have to be sure there's nothing else there!
-        $post_content = ""; 
-        for ($i=1; $i<count($split_post_content); $i++) {
-          $post_content .= $split_post_content[$i] . "\n";
-        }
-        
-      }
-
-    }
-
-    return $post_content;
-}
-
-/* dfll_customField_setValue
-* Sets the custom field value.
-* @param STRING
-*/
-function dfll_customField_setValue($post_id) {
-    global $dfllCustomFieldValue;
-    
-    // Insert the custom field value, if it isn't already inserted
-    if ($dfllCustomFieldValue) {
-        add_post_meta($post_id, 'linked_list_url', $dfllCustomFieldValue, true);
-    }
-}
-
-// Grab the custom field value and save to a global
-add_filter('content_save_pre', 'dfll_customField_getValue',1); 
-// Insert the custom field value into the post's metadata
-add_action('save_post', 'dfll_customField_setValue',2);
-
-/*-----------------------------------------------------------------------------
-  Hooks into the Twitter Tools plugin to allow you to tweet your glyph along
-  with linked list or non-linked list posts. Thanks to Ben Brooks for the 
-  suggestion. Twitter Tools is at http://wordpress.org/extend/plugins/twitter-tools/
------------------------------------------------------------------------------*/
-
-function dfll_tweet($tweet) {
-  global $post;
-  global $dfllCustomFieldValue; // in case it was added using the first-line method
-  $options = get_option('dfll_options');  
-  $url = get_post_meta($post->ID, 'linked_list_url', true);
-
-  if (empty($url) && empty($dfllCustomFieldValue)) { // not a linked list item
-    if ($options['twitter_glyph_before_non_linked_list']) { // check for option 
-      $tweet->tw_text = get_glyph() . " " . $tweet->tw_text;
-    }
-  } else { // is a linked list item
-    if ($options['twitter_glyph_before_linked_list']) { // check for option 
-      $tweet->tw_text =  $options['glyph_before_link_title_text'] . " " . $tweet->tw_text;
-    }
-  }
-
-  return $tweet;
-}
-add_filter('aktt_do_tweet', 'dfll_tweet');
 
 ?>
