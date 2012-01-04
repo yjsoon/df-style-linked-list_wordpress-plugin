@@ -97,7 +97,7 @@ add_filter('the_title_rss', 'insert_title_glyph_rss');
 
 // Add the menu 
 function dfll_menu() {
-	global $dfll_adminpage;
+  global $dfll_adminpage;
   $dfll_adminpage = add_options_page('Linked List Options', 'Linked List', 'manage_options', 'dfll', 'dfll_options_page');
   add_action("admin_head-$dfll_adminpage", "dfll_help");
   
@@ -123,8 +123,8 @@ function dfll_init() {
 		define('DFLL_VERSION','2.7.5');
 	} else {
 		define('DFLL_VERSION','2.7.4');
+		register_setting('dfll_options','dfll_options','dfll_sanitize_checkbox');
 		upgrade_dfll();
-		define('DFLL_VERSION','2.7.5');
 	}
   add_settings_section("dfll_main", "Linked List Properties", "dfll_text", "dfll");
   add_settings_field("link_goes_to", "RSS link goes to linked item", "link_goes_to_callback", "dfll", "dfll_main");
@@ -290,7 +290,7 @@ function upgrade_dfll() {
 	update_option('dfll_use_first_link',$options['use_first_link']); 
 	update_option('dfll_twitter_glyph_before_linked_list',$options['twitter_glyph_before_linked_list']);
 	update_option('dfll_twitter_glyph_before_non_linked_list',$options['twitter_glyph_before_non_linked_list']);
-	unregister_setting('dfll_options');
+	update_option('dfll_options',false);
 	
 	
 }
@@ -312,12 +312,7 @@ function dfll_sanitize_checkbox($options) {
 
 /* Add help */
 function dfll_help() {
-	global $dfll_adminpage;
-	$screen = get_current_screen();
-  if ($screen->id != $dfll_adminpage ) {
-	  return;
-  }
-  
+  global $dfll_adminpage;
   $help = '<h3>Some Notes</strong></h3>';
   $help .= '<ul style="margin-left: 1.5em; list-style-type:disc;">';
   $help .= "<li>Changing the settings on this page <em>only affects the behaviour of your RSS feeds</em>, i.e. it won't change the way your blog is displayed on the web. To change your blog's display properties, edit your theme to use the following functions: is_linked_list(), get_the_linked_list_link(), get_glyph() and get_the_permalink_glyph().</li>";
@@ -326,9 +321,14 @@ function dfll_help() {
   $help .= '<li>For theme designers, these are the functions that you can use: get_the_permalink_glyph(), the_permalink_glyph(), get_the_linked_list_link(), the_linked_list_link(), get_glyph() and is_linked_list().</li>';
   $help .= "</ul>";
   $help .="<p>For more information or to contact the author, please refer to the <a href=\"http://github.com/yjsoon/df-style-linked-list_wordpress-plugin\">plugin homepage</a>.</p>";
+  if (function_exists('get_current_screen')) {
+	$screen = get_current_screen();
+    if ($screen->id != $dfll_adminpage ) {
+	  return;
+    }
+    $screen->add_help_tab(array('id'=>'settings_page_dfll','title'=>'Linked List Help','content'=>$help));  
+  }
   
-  
-  $screen->add_help_tab(array('settings_page_dfll','Linked List Help',$help)); 
 }
 
 /* Actual options page rendering */
