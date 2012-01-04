@@ -118,7 +118,14 @@ function dfll_init() {
 	register_setting('dfll_options','dfll_use_first_link');
 	register_setting('dfll_options','dfll_twitter_glyph_before_linked_list');
 	register_setting('dfll_options','dfll_twitter_glyph_before_non_linked_list');
-  
+	
+	if (!get_option('dfll_options')) {
+		define('DFLL_VERSION','2.7.5');
+	} else {
+		define('DFLL_VERSION','2.7.4');
+		upgrade_dfll();
+		define('DFLL_VERSION','2.7.5');
+	}
   add_settings_section("dfll_main", "Linked List Properties", "dfll_text", "dfll");
   add_settings_field("link_goes_to", "RSS link goes to linked item", "link_goes_to_callback", "dfll", "dfll_main");
   add_settings_field("glyph_after_post", "Insert permalink after post", "glyph_after_post_callback", "dfll", "dfll_main");
@@ -133,6 +140,8 @@ function dfll_init() {
   
 }
 add_action('admin_init', 'dfll_init');
+
+
 
 
 /* Callback functions to display each of the options */
@@ -266,6 +275,25 @@ function dfll_defaults_callback() {
 	update_option('dfll_twitter_glyph_before_non_linked_list','');
 }
 
+function upgrade_dfll() {
+	$options = get_option('dfll_options');
+	
+	update_option('dfll_link_goes_to',$options['link_goes_to']);
+	update_option('dfll_glyph_after_post',$options['glyph_after_post']); 
+	update_option('dfll_glyph_after_post_text',$options['glyph_after_post_text']); 
+	update_option('dfll_glyph_before_link_title',$options['glyph_before_link_title']); 
+	update_option('dfll_glyph_before_link_title_text',$options['glyph_before_link_title_text']); 
+	update_option('dfll_glyph_after_link_title',$options['glyph_after_link_title']); 
+	update_option('dfll_glyph_after_link_title_text',$options['glyph_after_link_title_text']); 
+	update_option('dfll_glyph_before_blog_title',$options['glyph_before_blog_title']); 
+	update_option('dfll_glyph_before_blog_title_text',$options['glyph_before_blog_title_text']);
+	update_option('dfll_use_first_link',$options['use_first_link']); 
+	update_option('dfll_twitter_glyph_before_linked_list',$options['twitter_glyph_before_linked_list']);
+	update_option('dfll_twitter_glyph_before_non_linked_list',$options['twitter_glyph_before_non_linked_list']);
+	unregister_setting('dfll_options');
+	
+	
+}
 
 
 function dfll_sanitize_checkbox($options) {
