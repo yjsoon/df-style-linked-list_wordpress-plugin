@@ -4,7 +4,7 @@ Plugin Name: DF-Style Linked List
 Plugin URI: http://github.com/yjsoon/df-style-linked-list_wordpress-plugin
 Description: Make your blog's RSS feed behave like <a href="http://daringfireball.net">Daring Fireball</a>. To use, set the custom field "linked_list_url" to the desired location on a link post. See "DF-Style Linked List" under WordPress Settings for more options. <strong>NEW</strong>: Now supports "Post This" and Twitter Tools integration &mdash; please see settings page for more details or to enable these features.
 Author: Yinjie Soon
-Version: 2.7.4
+Version: 2.8
 Author URI: http://yjsoon.com/dfll-plugin
 */
 
@@ -36,9 +36,10 @@ function get_glyph() {
 
 // Called to see if the current post in the loop is a linked list
 function is_linked_list() {
-  global $wp_query;
-  $postid = $wp_query->post->ID;
-  $url = get_post_meta($postid, 'linked_list_url', true);
+  // global $wp_query;
+  // $postid = $wp_query->post->ID;
+  // $url = get_post_meta($postid, 'linked_list_url', true);
+  $url = get_post_custom_values('linked_list_url');
   return (!empty($url));
 }
 
@@ -50,15 +51,15 @@ function is_linked_list() {
 // Echoes the linked list link if it should
 function ensure_rss_linked_list($value) {
   if (get_option('dfll_link_goes_to') && is_linked_list()) {
-    // Thanks to @pyrmont for the patch here and below.
-    echo '<![CDATA[' . get_the_linked_list_link() . ']]>';
+    return get_the_linked_list_link();
   } else {
-    echo $value;
+    return $value;
   }
 }
 
 // Now set function up to execute when the admin_footer action is called
-add_action('the_permalink_rss', 'ensure_rss_linked_list');
+// Priority 100 for compatibility with Google Analytics plugin
+add_filter('the_permalink_rss', 'ensure_rss_linked_list', 100);
 
 
 // Inject permalink glyph into RSS feed contents
@@ -98,7 +99,7 @@ add_filter('the_title_rss', 'insert_title_glyph_rss');
 // Add the menu 
 function dfll_menu() {
   global $dfll_adminpage;
-  $dfll_adminpage = add_options_page('Linked List Options', 'Linked List', 'manage_options', 'dfll', 'dfll_options_page');
+  $dfll_adminpage = add_options_page('Linked List Options', 'DF-Style Linked List', 'manage_options', 'dfll', 'dfll_options_page');
   add_action("admin_head-$dfll_adminpage", "dfll_help");
   
 }
@@ -120,10 +121,10 @@ function dfll_init() {
 	register_setting('dfll_options','dfll_twitter_glyph_before_non_linked_list');
 	
 	if (!get_option('dfll_options')) {
-		define('DFLL_VERSION','2.7.5');
+		define('DFLL_VERSION','2.8');
 	} else {
 		define('DFLL_VERSION','2.7.4');
-		register_setting('dfll_options','dfll_options','dfll_sanitize_checkbox');
+		// register_setting('dfll_options','dfll_options','dfll_sanitize_checkbox');
 		upgrade_dfll();
 	}
   add_settings_section("dfll_main", "Linked List Properties", "dfll_text", "dfll");
@@ -295,7 +296,7 @@ function upgrade_dfll() {
 	
 }
 
-
+/*
 function dfll_sanitize_checkbox($options) {
   $dfll_off = array("link_goes_to"=>false, 
                             "glyph_after_post" => false, 
@@ -309,6 +310,7 @@ function dfll_sanitize_checkbox($options) {
                             );
   return array_merge($dfll_off,$options);
 }
+ */
 
 /* Add help */
 function dfll_help() {
@@ -441,9 +443,10 @@ add_action('save_post', 'dfll_customField_setValue',2);
 -----------------------------------------------------------------------------*/
 
 function dfll_tweet($tweet) {
-  global $post;
+  // global $post;
   global $dfllCustomFieldValue; // in case it was added using the first-line method
-  $url = get_post_meta($post->ID, 'linked_list_url', true);
+  // $url = get_post_meta($post->ID, 'linked_list_url', true);
+  $url = get_post_custom_values('linked_list_url');
 
   if (empty($url) && empty($dfllCustomFieldValue)) { // not a linked list item
     if (get_option('dfll_twitter_glyph_before_non_linked_list')) { // check for option 
