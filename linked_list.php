@@ -127,17 +127,26 @@ function dfll_init() {
 		// register_setting('dfll_options','dfll_options','dfll_sanitize_checkbox');
 		upgrade_dfll();
 	}
-  add_settings_section("dfll_main", "Linked List Properties", "dfll_text", "dfll");
-  add_settings_field("link_goes_to", "RSS link goes to linked item", "link_goes_to_callback", "dfll", "dfll_main");
-  add_settings_field("glyph_after_post", "Insert permalink after post", "glyph_after_post_callback", "dfll", "dfll_main");
-  add_settings_field("glyph_after_post_text", "", "glyph_after_post_text_callback", "dfll", "dfll_main");
-  add_settings_field("glyph_before_link_title", "Highlight link post titles", "glyph_before_link_title_callback", "dfll", "dfll_main");
-  add_settings_field("glyph_before_link_title_text", "", "glyph_before_link_title_text_callback", "dfll", "dfll_main");
-  add_settings_field("glyph_after_link_title", "", "glyph_after_link_title_callback", "dfll", "dfll_main");
-  add_settings_field("glyph_after_link_title_text", "", "glyph_after_link_title_text_callback", "dfll", "dfll_main");
-  add_settings_section("dfll_main2", "Blog Post Properties", "dfll_text2", "dfll");
-  add_settings_field("glyph_before_blog_title", "Highlight blog post titles", "glyph_before_blog_title_callback", "dfll", "dfll_main2");
-  add_settings_field("glyph_before_blog_title_text", "", "glyph_before_blog_title_text_callback", "dfll", "dfll_main2");
+
+    add_settings_section("dfll_main", "Linked List Properties", "dfll_text", "dfll");
+    add_settings_field("link_goes_to", "RSS link goes to linked item", "link_goes_to_callback", "dfll", "dfll_main");
+    add_settings_field("glyph_after_post", "Insert permalink after post", "glyph_after_post_callback", "dfll", "dfll_main");
+    add_settings_field("glyph_after_post_text", "", "glyph_after_post_text_callback", "dfll", "dfll_main");
+    add_settings_field("glyph_before_link_title", "Highlight link post titles", "glyph_before_link_title_callback", "dfll", "dfll_main");
+    add_settings_field("glyph_before_link_title_text", "", "glyph_before_link_title_text_callback", "dfll", "dfll_main");
+    add_settings_field("glyph_after_link_title", "", "glyph_after_link_title_callback", "dfll", "dfll_main");
+    add_settings_field("glyph_after_link_title_text", "", "glyph_after_link_title_text_callback", "dfll", "dfll_main");
+
+    add_settings_section("dfll_main2", "Blog Post Properties", "dfll_text2", "dfll");
+    add_settings_field("glyph_before_blog_title", "Highlight blog post titles", "glyph_before_blog_title_callback", "dfll", "dfll_main2");
+    add_settings_field("glyph_before_blog_title_text", "", "glyph_before_blog_title_text_callback", "dfll", "dfll_main2");
+
+    add_settings_section("dfll_main3", "Linking From Posts", "dfll_text3", "dfll");
+    add_settings_field("use_first_link", "Use first link in post", "use_first_link_callback", "dfll", "dfll_main3");
+
+    add_settings_section("dfll_main4", "Twitter Tools integration", "dfll_text4", "dfll");
+    add_settings_field("twitter_glyph_before_non_linked_list", "Insert glyph before non-linked list items in tweets", "twitter_glyph_before_non_callback", "dfll", "dfll_main4");
+    add_settings_field("twitter_glyph_before_linked_list", "Insert glyph before linked list items in tweets", "twitter_glyph_before_callback", "dfll", "dfll_main4");
   
 }
 add_action('admin_init', 'dfll_init');
@@ -255,6 +264,14 @@ function dfll_text2() {
   echo "<p>This section defines the behaviour of RSS entries of blog posts (i.e., not links).</p>";  
 }
 
+function dfll_text3() {
+  echo "<p>This section allows you to enable the posting of linked_list_url links from <em>within</em> your posts, so you don't have to set the custom field yourself.</p>";
+}
+
+function dfll_text4() {
+  echo "<p>This section customises whether your glyph shows up in auto-tweets. You must have the <a href='http://wordpress.org/extend/plugins/twitter-tools/'>Twitter Tools</a> plugin installed. If you want to remove Twitter Tool's built-in tweet prefix, read instructions at <a href='http://www.papajojo.com/how-to-remove-tweet-prefix-from-twitter-tools-wordpress-plugin/'>this link</a>, but please use with caution if you're both tweeting your blog posts and blogging your tweets!</p>";
+}
+
 /* Add default options */
 
 register_activation_hook(__FILE__, 'dfll_defaults_callback');
@@ -271,7 +288,7 @@ function dfll_defaults_callback() {
 	update_option('dfll_glyph_after_link_title_text',''); 
 	update_option('dfll_glyph_before_blog_title',true); 
 	update_option('dfll_glyph_before_blog_title_text','&#9733;');
-	update_option('dfll_use_first_link','true'); 
+	update_option('dfll_use_first_link',false); 
 	update_option('dfll_twitter_glyph_before_linked_list','');
 	update_option('dfll_twitter_glyph_before_non_linked_list','');
 }
