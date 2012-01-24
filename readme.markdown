@@ -1,4 +1,4 @@
-### Daring Fireball-style Linked List Plugin ###
+# Daring Fireball-style Linked List Plugin #
 Contributors: yjsoon
 Donate link: http://yjsoon.com/dfll-plugin
 Tags: links, rss, wordpress, linkblogs, linked-list
@@ -57,30 +57,27 @@ Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).
 * To customize the theme, use the child theme provided, or check out my [theme customization instructions](http://yjsoon.com/2011/02/customising-your-wordpress-theme-for-the-df-linked-list-plugin).
 * Some basic instructions follow: Templates can be customised by using the provided functions to check whether your are rendering a linked list item or not. For example:
 
-<code>
+        <!--the top part of a template-->
 
-   <!--the top part of a template-->
-   <?php if (have_posts()): ?>
-      <?php while (have_posts()) : the_post(); ?>
+        <?php if (have_posts()): ?>
+            <?php while (have_posts()) : the_post(); ?>
+                <?php if (is_linked_list()): ?>
 
-        <?php if (is_linked_list()): ?>
+                    <!-- other HTML formatting -->
+                    <a href="<?php the_linked_list_link()">This is a linked list link</a>
+                    <!-- other HTML formatting -->
 
-          ...other HTML formatting...
-          <a href="<?php the_linked_list_link()">This is a linked list link</a>
-          ...other HTML formatting...
+                <?php else: ?>
 
-        <?php else: ?>
+                    <!-- other HTML formatting -->
+                    <a href="<?php the_link()">This is a normal post link</a>
+                    <!-- other HTML formatting -->
 
-          ...other HTML formatting...
-          <a href="<?php the_link()">This is a normal post link</a>
-          ...other HTML formatting...
-
+                <?php endif; ?>
+            <?php endwhile; ?>
         <?php endif; ?>
-      <?php endwhile; ?>
-    <?php endif; ?>
-    <!--the rest of the template-->
 
-</code>
+        <!--the rest of the template-->
 
 * Essentially, use the `is_linked_list()` function to check, then alter your template the way you wish to make it look or act differently.
 * Other functions you can use are `get_the_permalink_glyph()`, `the_permalink_glyph()`, `get_the_linked_list_link()`, `the_linked_list_link()` and `get_glyph()`.
@@ -94,66 +91,66 @@ Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).
 
 ## Frequently Asked Questions ##
 
-# Why doesn't my RSS feed change immediately? #
+### Why doesn't my RSS feed change immediately? ###
 
 The changes could take a while to show up. Google Reader took a day to register changes in my feed settings. If you want to test, add your RSS feed to [My Yahoo](http://my.yahoo.com) and refresh it with the "options" pane -- this updated the most reliably for me while testing.
 
-# Why doesn't the new link posting work? #
+### Why doesn't the new link posting work? ###
 
 You have to enable it in the options page, and also make sure you insert an anchor tag link on the first line which __ends in a period (dot)__.
 
-# This doesn't work! My blog looks the same! #
+### This doesn't work! My blog looks the same! ###
 
 You still have to customize your theme to make it look right. Please refer to [this blog entry](http://yjsoon.com/2011/02/customising-your-wordpress-theme-for-the-df-linked-list-plugin) for more information.
 
 ## Changelog ##
 
-# 2.8 #
+### 2.8 ###
 * Cleanup of options (thanks alexrudy)
 * Syntax cleanup (thanks jgwong)
 * Added new twentyeleven theme (just in time for 2012, oops)
 
-# 2.7.3 #
+### 2.7.3 ###
 * Included child theme and instructions.
 
-# 2.7 #
+### 2.7 ###
 * Twitter Tools support.
 
-# 2.6 #
+### 2.6 ###
 * CDATA fix -- RSS should now validate. Thanks to @pyrmont for the fix.
 
-# 2.5.4 #
+### 2.5.4 ###
 * Critical stability update -- the previous version was causing some issues on certain installs. If you have any problems, please look for me on [Twitter](http://twitter.com/yjsoon). 
 * Fixed permalink glyph not appearing.
 
-# 2.5 #
+### 2.5 ###
 * Added functionality to set the linked list URL custom field with an anchor tag link in the first line.
 * Removed the ability to post a linked list URL with [ll] and [/ll]. If you'd like to do that, use Justin Blanton's [CF Setter](http://hypertext.net/projects/cfsetter) instead.
 
-# 2.0 #
+### 2.0 ###
 * Initial public release on WordPress plugins
 
 ## Upgrade Notice ##
 
-# 2.8 #
+### 2.8 ###
 Some code cleanup and small fixes. Includes Twentyeleven child theme now (sorry, a bit late).
 
-# 2.7.3 #
+### 2.7.3 ###
 Includes child theme and instructions.
 
-# 2.7 #
+### 2.7 ###
 Twitter Tools support.
 
-# 2.6 #
+### 2.6 ###
 CDATA fix -- RSS should now validate. Thanks to @pyrmont for the fix.
 
-# 2.5.3 #
+### 2.5.3 ###
 Bugfix for permalink glyph not showing up at end of posts. Sorry about that.
 
-# 2.5.2 #
+### 2.5.2 ###
 Critical stability update -- the previous version was causing some issues on certain installs. If you have any problems, please look for me on [Twitter](http://twitter.com/yjsoon). 
 
-# 2.5.1 #
+### 2.5.1 ###
 This version adds a major new feature -- you can now set the linked_list_url field without going into WordPress's custom fields menu. See [plugin homepage](http://yjsoon.com/dfll-plugin) for details.
 
 
