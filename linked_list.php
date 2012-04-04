@@ -44,6 +44,26 @@ function is_linked_list() {
 }
 
 
+// Just returns the blog glyph (this is set in the option under "Highlight blog post titles")
+function get_blog_glyph() {
+  $options = get_option('dfll_options');  
+  return $options['glyph_before_blog_title_text'];
+}
+// Same as above but echoes it
+function the_blog_glyph() {
+	echo get_blog_glyph();
+}
+
+// Just returns the link glyph (this is set in the option under "Highlight link post titles")
+function get_link_glyph() {
+  $options = get_option('dfll_options');  
+  return $options['glyph_before_link_title_text'];
+}
+// Same as above but echoes it
+function the_link_glyph() {
+	echo get_link_glyph();
+}
+
 /*-----------------------------------------------------------------------------
   RSS modification handling functions
 -----------------------------------------------------------------------------*/
