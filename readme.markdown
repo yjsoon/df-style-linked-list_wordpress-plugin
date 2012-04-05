@@ -1,10 +1,10 @@
 # Daring Fireball-style Linked List Plugin #
-Contributors: yjsoon
-Donate link: http://yjsoon.com/dfll-plugin
-Tags: links, rss, wordpress, linkblogs, linked-list
-Requires at least: 2.7
-Tested up to: 3.3.1
-Stable tag: 2.8
+- Contributors: yjsoon
+- Donate link: [http://yjsoon.com/dfll-plugin](http://yjsoon.com/dfll-plugin)
+- Tags: links, rss, wordpress, linkblogs, linked-list
+- Requires at least: 2.7
+- Tested up to: 3.3.1
+- Stable tag: 2.8
 
 Make your RSS feed for linked-list posts behave like Daring Fireball's: item's RSS permalink goes to link, and other modifications.
 
@@ -156,7 +156,7 @@ This version adds a major new feature -- you can now set the linked_list_url fie
 
 ## License ##
 
-Copyright (c) 2010-2012 YJ Soon
+Copyright (c) 2010-2011 YJ Soon
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
