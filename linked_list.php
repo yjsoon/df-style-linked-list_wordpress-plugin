@@ -469,9 +469,9 @@ function dfll_customField_setValue($post_id) {
 }
 
 // Grab the custom field value and save to a global
-add_filter('content_save_pre', 'dfll_customField_getValue',1); 
+add_filter('content_save_pre', 'dfll_customField_getValue',101); 
 // Insert the custom field value into the post's metadata
-add_action('save_post', 'dfll_customField_setValue',2);
+add_action('save_post', 'dfll_customField_setValue',102);
 
 /*-----------------------------------------------------------------------------
   Hooks into the Twitter Tools plugin to allow you to tweet your glyph along
@@ -480,10 +480,10 @@ add_action('save_post', 'dfll_customField_setValue',2);
 -----------------------------------------------------------------------------*/
 
 function dfll_tweet($tweet) {
-  // global $post;
+  global $post;
   global $dfllCustomFieldValue; // in case it was added using the first-line method
-  // $url = get_post_meta($post->ID, 'linked_list_url', true);
-  $url = get_post_custom_values('linked_list_url');
+  $url = get_post_meta($post->ID, 'linked_list_url', true);
+  // $url = get_post_custom_values('linked_list_url');
 
   if (empty($url) && empty($dfllCustomFieldValue)) { // not a linked list item
     if (get_option('dfll_twitter_glyph_before_non_linked_list')) { // check for option 
@@ -497,6 +497,6 @@ function dfll_tweet($tweet) {
 
   return $tweet;
 }
-add_filter('aktt_do_tweet', 'dfll_tweet');
+add_filter('aktt_do_tweet', 'dfll_tweet', 103);
 
 ?>
