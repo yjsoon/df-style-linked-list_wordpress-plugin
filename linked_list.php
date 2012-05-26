@@ -40,7 +40,12 @@ function is_linked_list() {
   // $postid = $wp_query->post->ID;
   // $url = get_post_meta($postid, 'linked_list_url', true);
   $url = get_post_custom_values('linked_list_url');
-  return (!empty($url));
+  if (!empty($url)) {
+    $GLOBALS['dfllCustomFieldValue'] = $link;
+    return true;
+  } 
+  return false;
+  // return (!empty($url));
 }
 
 
@@ -102,9 +107,8 @@ function insert_title_glyph_rss($title,$cdata=true) {
     $title = get_option('dfll_glyph_before_blog_title_text') . " " . $title;
   }
   elseif (is_linked_list()) { // if linked list title
-    if ( get_option('dfll_glyph_before_link_title') ) $title  = get_option('dfll_glyph_before_link_title_text') . " " . $title;
-    if (get_option('dfll_glyph_after_link_title') )   $title = $title . " " . get_option('dfll_glyph_after_link_title_text');
-    if ($cdata) $title = '<![CDATA[' . $title . ']]>';
+    if (get_option('dfll_glyph_before_link_title')) $title  = ent2ncr(get_option('dfll_glyph_before_link_title_text')) . " " . $title;
+    if (get_option('dfll_glyph_after_link_title'))   $title = $title . " " . ent2ncr(get_option('dfll_glyph_after_link_title_text'));
   }
 
   return $title;
@@ -289,7 +293,7 @@ function dfll_text3() {
 }
 
 function dfll_text4() {
-  echo "<p>This section customises whether your glyph shows up in auto-tweets. You must have the <a href='http://wordpress.org/extend/plugins/twitter-tools/'>Twitter Tools</a> plugin installed. If you want to remove Twitter Tool's built-in tweet prefix, read instructions at <a href='http://www.papajojo.com/how-to-remove-tweet-prefix-from-twitter-tools-wordpress-plugin/'>this link</a>, but please use with caution if you're both tweeting your blog posts and blogging your tweets!</p>";
+  echo "<p>This section customises whether your glyph shows up in auto-tweets. You must have the <a href='http://wordpress.org/extend/plugins/twitter-tools/'>Twitter Tools</a> plugin installed.</p><p><b>Important</b>: Please note that there are quite a few steps to follow if you want to use this feature. Refer to the 'Twitter Tools' section on <a href='http://yjsoon.com/dfll-plugin'>this post</a> to proceed.";
 }
 
 /* Add default options */
@@ -390,7 +394,7 @@ function dfll_options_page() {
       <h3>Notes - Read First!</h3>
     </div>
 -->
-    <p><em>Please take a look at the help drop down menu (up there &#8599; ) for more information on getting started. When entering symbols, it's advisable to use the HTML character entities &emdash; the ones with a &amp; in front and which end with semicolons &emdash; instead of the symbols themselves. This may prevent URL errors.</em></p>
+    <p><em>Please take a look at the help drop down menu (up there &#8599; ) for more information on getting started. When entering symbols, it's advisable to use numerical HTML character entities &mdash; the ones with a &amp; in front and which end with semicolons &mdash; instead of the symbols themselves. This may prevent URL errors.</em></p>
 
     <form name="df-form" method="post" action="options.php">
       <?php settings_fields('dfll_options'); ?>
@@ -469,9 +473,9 @@ function dfll_customField_setValue($post_id) {
 }
 
 // Grab the custom field value and save to a global
-add_filter('content_save_pre', 'dfll_customField_getValue',101); 
+add_filter('content_save_pre', 'dfll_customField_getValue'); 
 // Insert the custom field value into the post's metadata
-add_action('save_post', 'dfll_customField_setValue',102);
+add_action('save_post', 'dfll_customField_setValue');
 
 /*-----------------------------------------------------------------------------
   Hooks into the Twitter Tools plugin to allow you to tweet your glyph along
@@ -479,11 +483,9 @@ add_action('save_post', 'dfll_customField_setValue',102);
   suggestion. Twitter Tools is at http://wordpress.org/extend/plugins/twitter-tools/
 -----------------------------------------------------------------------------*/
 
-function dfll_tweet($tweet) {
-  global $post;
+function dfll_tweet($tweet, $post_id) {
   global $dfllCustomFieldValue; // in case it was added using the first-line method
-  $url = get_post_meta($post->ID, 'linked_list_url', true);
-  // $url = get_post_custom_values('linked_list_url');
+  $url = get_post_meta($post_id, 'linked_list_url', true);
 
   if (empty($url) && empty($dfllCustomFieldValue)) { // not a linked list item
     if (get_option('dfll_twitter_glyph_before_non_linked_list')) { // check for option 
@@ -497,6 +499,36 @@ function dfll_tweet($tweet) {
 
   return $tweet;
 }
-add_filter('aktt_do_tweet', 'dfll_tweet', 103);
+add_filter('aktt_do_tweet', 'dfll_tweet', 15, 2);
+
+
+/* Plugin settings access
+------------------------------------------------------------------------------ */
+
+function dfll_plugin_action_links($links, $file) {
+	$plugin_file = basename(__FILE__);
+	if (basename($file) == $plugin_file) {
+		$settings_link = '<a href="options-general.php?page=dfll">'.__('Settings', 'dfll').'</a>';
+		array_unshift($links, $settings_link);
+	}
+	return $links;
+}
+add_filter('plugin_action_links', 'dfll_plugin_action_links', 10, 2);
+
+
+/* Linkmarklet possible fix (doesn't work)
+------------------------------------------------------------------------------ */
+
+// add_action('save_post', 'adjust_customfield_before_saving');
+// 
+// function adjust_customfield_before_saving( $post_id ) 
+// {
+//     $settings       = get_option( LINKMARKLET_PREFIX . 'settings' );
+//     $custom_field   = isset( $settings['custom_field'] ) ? $settings['custom_field'] : '';
+//     if( !empty( $custom_field ) )
+//         update_post_meta( $post_id, $custom_field, mysql_real_escape_string($_POST['url']) );
+// }
+
+
 
 ?>
