@@ -168,9 +168,9 @@ function dfll_init() {
     add_settings_section("dfll_main3", "Linking From Posts", "dfll_text3", "dfll");
     add_settings_field("use_first_link", "Use first link in post", "use_first_link_callback", "dfll", "dfll_main3");
 
-    add_settings_section("dfll_main4", "Twitter Tools integration", "dfll_text4", "dfll");
-    add_settings_field("twitter_glyph_before_non_linked_list", "Insert glyph before non-linked list items in tweets", "twitter_glyph_before_non_callback", "dfll", "dfll_main4");
-    add_settings_field("twitter_glyph_before_linked_list", "Insert glyph before linked list items in tweets", "twitter_glyph_before_callback", "dfll", "dfll_main4");
+    // add_settings_section("dfll_main4", "Twitter Tools integration", "dfll_text4", "dfll");
+    // add_settings_field("twitter_glyph_before_non_linked_list", "Insert glyph before non-linked list items in tweets", "twitter_glyph_before_non_callback", "dfll", "dfll_main4");
+    // add_settings_field("twitter_glyph_before_linked_list", "Insert glyph before linked list items in tweets", "twitter_glyph_before_callback", "dfll", "dfll_main4");
   
 }
 add_action('admin_init', 'dfll_init');

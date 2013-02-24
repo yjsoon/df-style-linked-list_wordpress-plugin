@@ -3,14 +3,14 @@
 - Donate link: [http://yjsoon.com/dfll-plugin](http://yjsoon.com/dfll-plugin)
 - Tags: links, rss, wordpress, linkblogs, linked-list
 - Requires at least: 2.7
-- Tested up to: 3.3.1
-- Stable tag: 2.8
+- Tested up to: 3.5.1
+- Stable tag: 2.8.1
 
 Make your RSS feed for linked-list posts behave like Daring Fireball's: item's RSS permalink goes to link, and other modifications.
 
 ## Description ##
 
-This plugin makes your RSS feed behave like Daring Fireball's linked list posts, and has some extra features to make posting linked lists easier. Also supports Twitter Tools.
+This plugin makes your RSS feed behave like Daring Fireball's linked list posts, and has some extra features to make posting linked lists easier. 
 
 _Part One_
 
@@ -45,7 +45,7 @@ This was adapted from [CF Setter by Justin Blanton](http://hypertext.net/project
 
 _Twitter Tools support_
 
-If you're using [Twitter Tools](http://crowdfavorite.com/wordpress/plugins/twitter-tools/), you can customise your tweets to have your custom glyph or text appear before either your "regular" or linked-list posts.
+Twitter Tools support has been deprecated, given changes in the plugin. Sorry! If you had it, it should still work.
 
 Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).  
 
@@ -82,7 +82,6 @@ Questions or suggestions? Look me up on [Twitter](http://twitter.com/yjsoon).
 * Essentially, use the `is_linked_list()` function to check, then alter your template the way you wish to make it look or act differently.
 * Other functions you can use are `get_the_permalink_glyph()`, `the_permalink_glyph()`, `get_the_linked_list_link()`, `the_linked_list_link()` and `get_glyph()`.
 * For more information about customizing wordpress templates, view the "Template Tags" document on the [Wordpress Codex](http://codex.wordpress.org/Template_Tags)
-* To enable the first link and Twitter Tools functionality or find out more, turn them on in the checkbox under Settings.
 
 ## Usage ##
 
@@ -104,6 +103,9 @@ You have to enable it in the options page, and also make sure you insert an anch
 You still have to customize your theme to make it look right. Please refer to [this blog entry](http://yjsoon.com/2011/02/customising-your-wordpress-theme-for-the-df-linked-list-plugin) for more information.
 
 ## Changelog ##
+
+### 2.8.1 ###
+* Removed Twitter Tools
 
 ### 2.8 ###
 * Cleanup of options (thanks alexrudy)
@@ -132,6 +134,9 @@ You still have to customize your theme to make it look right. Please refer to [t
 
 ## Upgrade Notice ##
 
+### 2.8.1 ###
+Removed Twitter Tools and some cleanup.
+
 ### 2.8 ###
 Some code cleanup and small fixes. Includes Twentyeleven child theme now (sorry, a bit late).
 
@@ -156,7 +161,7 @@ This version adds a major new feature -- you can now set the linked_list_url fie
 
 ## License ##
 
-Copyright (c) 2010-2011 YJ Soon
+Copyright (c) 2010-2013 YJ Soon
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
