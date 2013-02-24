@@ -105,7 +105,8 @@ You still have to customize your theme to make it look right. Please refer to [t
 ## Changelog ##
 
 ### 2.8.1 ###
-* Removed Twitter Tools
+* Removed Twitter Tools support and plugin
+* Removed Linkmarklet version, you can now use the original
 
 ### 2.8 ###
 * Cleanup of options (thanks alexrudy)
@@ -135,7 +136,7 @@ You still have to customize your theme to make it look right. Please refer to [t
 ## Upgrade Notice ##
 
 ### 2.8.1 ###
-Removed Twitter Tools and some cleanup.
+Removed Twitter Tools and some cleanup. Now supports Linkmarklet. 
 
 ### 2.8 ###
 Some code cleanup and small fixes. Includes Twentyeleven child theme now (sorry, a bit late).
